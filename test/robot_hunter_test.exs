@@ -18,4 +18,28 @@ defmodule RobotHunterTest do
       RobotHunter.createRobot(%{x: 1, y: -1}, :camembert)
     end
   end
+
+  test "We can turn a robot to left" do
+    robot = RobotHunter.createRobot(:north)
+            |> RobotHunter.turnLeft
+    assert robot.orientation == :west
+
+    robot = RobotHunter.turnLeft(robot)
+    assert robot.orientation == :south
+
+    robot = RobotHunter.turnLeft(robot)
+    assert robot.orientation == :east
+
+    robot = RobotHunter.turnLeft(robot)
+    assert robot.orientation == :north
+  end
+
+
+  test "Can move forward" do
+    robot = RobotHunter.createRobot(%{x: 1, y: 1}, :north)
+    |> RobotHunter.moveForward
+
+    assert robot.position.x == 1
+    assert robot.position.y == 2
+  end
 end
