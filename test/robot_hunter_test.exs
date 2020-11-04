@@ -35,11 +35,28 @@ defmodule RobotHunterTest do
   end
 
 
-  test "Can move forward" do
+  test "Can move forward north" do
     robot = RobotHunter.createRobot(%{x: 1, y: 1}, :north)
     |> RobotHunter.moveForward
 
     assert robot.position.x == 1
     assert robot.position.y == 2
+  end
+
+  test "Can move forward twice north" do
+    robot = RobotHunter.createRobot(%{x: 1, y: 1}, :north)
+    |> RobotHunter.moveForward
+    |> RobotHunter.moveForward
+
+    assert robot.position.x == 1
+    assert robot.position.y == 3
+  end
+
+  test "Can move forward south" do
+    robot = RobotHunter.createRobot(%{x: 1, y: 1}, :south)
+    |> RobotHunter.moveForward
+
+    assert robot.position.x == 1
+    assert robot.position.y == 0
   end
 end

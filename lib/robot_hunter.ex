@@ -24,5 +24,13 @@ defmodule RobotHunter do
   defp turnLeftOrientation(:south), do: :east
   defp turnLeftOrientation(:east), do: :north
 
-  def moveForward(robot = %{orientation: :north, position: position}), do: %RobotHunter{ robot | position: %{x: 1, y: 2} }
+  defp moveForwardByOrientation, do: %{
+    :north => fn (pos) -> %{ pos | y: pos.y + 1} end,
+    :south => fn (pos) -> %{ pos | y: pos.y - 1} end
+  }
+
+  def moveForward(robot = %{orientation: orientation, position: position}) do
+     %RobotHunter{ robot | position: Map.get(moveForwardByOrientation, orientation).(position) }
+  end
+
 end
