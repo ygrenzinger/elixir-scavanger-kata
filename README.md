@@ -1,6 +1,20 @@
-# TreasureHunter
+# Scavanging Robots
 
-**TODO: Add description**
+## Features
+
+- a robot can move forward on the map (advancing on the square in the direction it face)
+- a robot can turn left or right
+- a robot has a durability score of 10
+- a robot can scavange scrap on the map
+- the map has a size and is "round" aka a robot moving at the top appears at the bottom and at the left appears at the right (and vice versa)
+- a robot can fight or collaborate with another robot when they meet on the same  square with the following rules:
+
+| Stategy     | Attack | Collaborate |
+| ----------- | ------ | ----------- |
+| Attack      | -2,-2  | 2,-2        |
+| Collaborate | -2,2   | 1,1         |
+
+Inspired by some [Nash equilibrium and game thoery](https://owlcation.com/stem/nashequilibrium) :D 
 
 ## Installation
 
@@ -16,6 +30,4 @@ end
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/treasure_hunter](https://hexdocs.pm/treasure_hunter).
 
