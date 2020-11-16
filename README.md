@@ -7,6 +7,8 @@
 - a robot has a durability score of 10
 - a robot can scavange scrap on the map
 - the map has a size and is "round" aka a robot moving at the top appears at the bottom and at the left appears at the right (and vice versa)
+- a map can have multiple robots
+- robots knows where scrap or other robots are due to an old satelitte giving clue :)
 - a robot can fight or collaborate with another robot when they meet on the same  square with the following rules:
 
 | Stategy     | Attack | Collaborate |
@@ -14,7 +16,12 @@
 | Attack      | -2,-2  | 2,-2        |
 | Collaborate | -2,2   | 1,1         |
 
-Inspired by some [Nash equilibrium and game thoery](https://owlcation.com/stem/nashequilibrium) :D 
+Inspired by some [Nash equilibrium and game thoery](https://en.wikipedia.org/wiki/Nash_equilibrium#Nash_Equilibrium) :D 
+
+## Testing with Property Based Testing
+
+Trying Quixir ? 
+https://github.com/pragdave/quixir
 
 ## Installation
 
