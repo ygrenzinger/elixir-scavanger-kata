@@ -1,6 +1,6 @@
-defmodule TreasureHunter do
+defmodule ScavangerKata do
   @moduledoc """
-  Documentation for `TreasureHunter`.
+  Documentation for `ScavangerKata`.
   """
 
   @doc """

@@ -1,4 +1,4 @@
-defmodule RobotHunter do
+defmodule RobotScavanger do
   defstruct(position: %{x: 0, y: 0}, orientation: :north)
 
   @doc """
@@ -6,18 +6,18 @@ defmodule RobotHunter do
 
   ## Examples
 
-      iex> RobotHunter.createRobot()
-      %RobotHunter{position: %{x: 0, y: 0}, orientation: :north}  
+      iex> RobotScavanger.createRobot()
+      %RobotScavanger{position: %{x: 0, y: 0}, orientation: :north}  
 
-      iex> RobotHunter.createRobot(%{x: 1, y: -1}, :south)
-      %RobotHunter{position: %{x: 1, y: -1}, orientation: :south}             
+      iex> RobotScavanger.createRobot(%{x: 1, y: -1}, :south)
+      %RobotScavanger{position: %{x: 1, y: -1}, orientation: :south}             
 
   """
   def createRobot(pos \\ %{x: 0, y: 0}, orientation \\ :north)
       when orientation in [:north, :south, :west, :east],
-      do: %RobotHunter{position: pos, orientation: orientation}
+      do: %RobotScavanger{position: pos, orientation: orientation}
 
-  def turnLeft(robot = %{orientation: orientation}), do: %RobotHunter{ robot | orientation: turnLeftOrientation(orientation) }
+  def turnLeft(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: turnLeftOrientation(orientation) }
 
   defp turnLeftOrientation(:north), do: :west
   defp turnLeftOrientation(:west), do: :south
@@ -30,7 +30,7 @@ defmodule RobotHunter do
   }
 
   def moveForward(robot = %{orientation: orientation, position: position}) do
-     %RobotHunter{ robot | position: Map.get(moveForwardByOrientation, orientation).(position) }
+     %RobotScavanger{ robot | position: Map.get(moveForwardByOrientation, orientation).(position) }
   end
 
 end
