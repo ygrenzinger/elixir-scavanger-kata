@@ -34,13 +34,55 @@ defmodule RobotScavangerTest do
     assert robot.orientation == :north
   end
 
+  test "We can turn a robot to right" do
+    robot = RobotScavanger.createRobot(:north)
+            |> RobotScavanger.turnRight
+    assert robot.orientation == :east
 
-  test "Can move forward north" do
-    robot = RobotScavanger.createRobot(%{x: 1, y: 1}, :north)
-    |> RobotScavanger.moveForward
+    robot = RobotScavanger.turnRight(robot)
+    assert robot.orientation == :south
 
-    assert robot.position.x == 1
-    assert robot.position.y == 2
+    robot = RobotScavanger.turnRight(robot)
+    assert robot.orientation == :west
+
+    robot = RobotScavanger.turnRight(robot)
+    assert robot.orientation == :north
+  end
+
+  for {title, departure, orientation, arrival} <- [
+    {
+      "Can move forward south",
+      [x: 1, y: 1],
+      "south",
+      [x: 1, y: 0]
+    },
+    {
+      "Can move forward north",
+      [x: 1, y: 1],
+      "north",
+      [x: 1, y: 2]
+    },
+    {
+      "Can move forward east",
+      [x: 1, y: 1],
+      "east",
+      [x: 2, y: 1]
+    },
+    {
+      "Can move forward west",
+      [x: 1, y: 1],
+      "west",
+      [x: 0, y: 1]
+    }
+  ] do
+
+    test "#{title}" do
+      robot = RobotScavanger.createRobot(Enum.into(unquote(departure), %{}), String.to_atom(unquote(orientation)))
+      |> RobotScavanger.moveForward
+
+      assert Enum.into(unquote(arrival), %{}) == robot.position
+    end
+
   end
 
   test "Can move forward twice north" do
@@ -52,11 +94,4 @@ defmodule RobotScavangerTest do
     assert robot.position.y == 3
   end
 
-  test "Can move forward south" do
-    robot = RobotScavanger.createRobot(%{x: 1, y: 1}, :south)
-    |> RobotScavanger.moveForward
-
-    assert robot.position.x == 1
-    assert robot.position.y == 0
-  end
 end
