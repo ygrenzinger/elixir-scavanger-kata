@@ -23,6 +23,11 @@ Inspired by some [Nash equilibrium and game thoery](https://en.wikipedia.org/wik
 Trying Quixir ? 
 https://github.com/pragdave/quixir
 
+## Types
+https://stackoverflow.com/questions/39243025/enums-in-elixir
+https://stackoverflow.com/questions/29977776/what-does-type-t-module-mean-in-elixir
+https://elixirschool.com/en/lessons/advanced/typespec/
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
