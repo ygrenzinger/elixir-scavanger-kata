@@ -17,21 +17,41 @@ defmodule RobotScavanger do
       when orientation in [:north, :south, :west, :east],
       do: %RobotScavanger{position: pos, orientation: orientation}
 
-  def turnLeft(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: turnLeftOrientation(orientation) }
+  def turnRight(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: nextOrientation(orientation) }
 
-  defp turnLeftOrientation(:north), do: :west
-  defp turnLeftOrientation(:west), do: :south
-  defp turnLeftOrientation(:south), do: :east
-  defp turnLeftOrientation(:east), do: :north
+  def turnLeft(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: previousOrientation(orientation) }
 
-  def turnRight(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: turnRightOrientation(orientation) }
+  @orientations [:north, :east, :south, :west]
 
-  defp turnRightOrientation(:north), do: :east
-  defp turnRightOrientation(:west), do: :north
-  defp turnRightOrientation(:south), do: :west
-  defp turnRightOrientation(:east), do: :south
+  defp nextOrientation(current) do
+    index = Enum.find_index(@orientations, fn orientation -> orientation == current end)
+    if index == 3 do
+      Enum.at(@orientations, 0)
+    else
+      Enum.at(@orientations, index+1)
+    end
+  end
 
-  defp moveForwardByOrientation, do: %{
+  defp previousOrientation(current) do
+    index = Enum.find_index(@orientations, fn orientation -> orientation == current end)
+    if index == 0 do
+      Enum.at(@orientations, 3)
+    else
+      Enum.at(@orientations, index-1)
+    end
+  end
+
+  # defp turnLeftOrientation(:north), do: :west
+  # defp turnLeftOrientation(:west), do: :south
+  # defp turnLeftOrientation(:south), do: :east
+  # defp turnLeftOrientation(:east), do: :north
+
+  # defp turnRightOrientation(:north), do: :east
+  # defp turnRightOrientation(:west), do: :north
+  # defp turnRightOrientation(:south), do: :west
+  # defp turnRightOrientation(:east), do: :south
+
+  defp moveForwardByOrientation(), do: %{
     :north => fn (pos) -> %{ pos | y: pos.y + 1} end,
     :south => fn (pos) -> %{ pos | y: pos.y - 1} end,
     :east => fn (pos) -> %{ pos | x: pos.x + 1} end,
@@ -39,7 +59,7 @@ defmodule RobotScavanger do
   }
 
   def moveForward(robot = %{orientation: orientation, position: position}) do
-     %RobotScavanger{ robot | position: Map.get(moveForwardByOrientation, orientation).(position) }
+     %RobotScavanger{ robot | position: Map.get(moveForwardByOrientation(), orientation).(position) }
   end
 
 end
