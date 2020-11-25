@@ -17,39 +17,19 @@ defmodule RobotScavanger do
       when orientation in [:north, :south, :west, :east],
       do: %RobotScavanger{position: pos, orientation: orientation}
 
-  def turnRight(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: nextOrientation(orientation) }
+  def turnRight(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: turnRightOrientation(orientation) }
 
-  def turnLeft(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: previousOrientation(orientation) }
+  def turnLeft(robot = %{orientation: orientation}), do: %RobotScavanger{ robot | orientation: turnLeftOrientation(orientation) }
 
-  @orientations [:north, :east, :south, :west]
+  defp turnLeftOrientation(:north), do: :west
+  defp turnLeftOrientation(:west), do: :south
+  defp turnLeftOrientation(:south), do: :east
+  defp turnLeftOrientation(:east), do: :north
 
-  defp nextOrientation(current) do
-    index = Enum.find_index(@orientations, fn orientation -> orientation == current end)
-    if index == 3 do
-      Enum.at(@orientations, 0)
-    else
-      Enum.at(@orientations, index+1)
-    end
-  end
-
-  defp previousOrientation(current) do
-    index = Enum.find_index(@orientations, fn orientation -> orientation == current end)
-    if index == 0 do
-      Enum.at(@orientations, 3)
-    else
-      Enum.at(@orientations, index-1)
-    end
-  end
-
-  # defp turnLeftOrientation(:north), do: :west
-  # defp turnLeftOrientation(:west), do: :south
-  # defp turnLeftOrientation(:south), do: :east
-  # defp turnLeftOrientation(:east), do: :north
-
-  # defp turnRightOrientation(:north), do: :east
-  # defp turnRightOrientation(:west), do: :north
-  # defp turnRightOrientation(:south), do: :west
-  # defp turnRightOrientation(:east), do: :south
+  defp turnRightOrientation(:north), do: :east
+  defp turnRightOrientation(:west), do: :north
+  defp turnRightOrientation(:south), do: :west
+  defp turnRightOrientation(:east), do: :south
 
   defp moveForwardByOrientation(), do: %{
     :north => fn (pos) -> %{ pos | y: pos.y + 1} end,
