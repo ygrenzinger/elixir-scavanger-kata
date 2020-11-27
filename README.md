@@ -35,14 +35,14 @@ Trying Quixir ?
 https://github.com/pragdave/quixir
 
 ## Types
-https://stackoverflow.com/questions/39243025/enums-in-elixir
-https://stackoverflow.com/questions/29977776/what-does-type-t-module-mean-in-elixir
-https://elixirschool.com/en/lessons/advanced/typespec/
+https://stackoverflow.com/questions/39243025/enums-in-elixir  
+https://stackoverflow.com/questions/29977776/what-does-type-t-module-mean-in-elixir  
+https://elixirschool.com/en/lessons/advanced/typespec/  
 
 ## Agent vs GenServer
-https://stackoverflow.com/questions/57107324/when-to-use-agent-instead-of-genserver-in-elixir
-https://awochna.com/2017/03/03/elixir-state-management.html
-https://crypt.codemancers.com/posts/2020-08-28-real-world-usecase-for-genserver-agent-in-elixir/
+https://stackoverflow.com/questions/57107324/when-to-use-agent-instead-of-genserver-in-elixir  
+https://awochna.com/2017/03/03/elixir-state-management.html  
+https://crypt.codemancers.com/posts/2020-08-28-real-world-usecase-for-genserver-agent-in-elixir/  
 
 
 ## Installation
