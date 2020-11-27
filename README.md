@@ -18,6 +18,17 @@
 
 Inspired by some [Nash equilibrium and game thoery](https://en.wikipedia.org/wiki/Nash_equilibrium#Nash_Equilibrium) :D 
 
+## US
+
+As a robot, I want to move on the world to reach a destination   
+As a robot, I want to know where are scraps to pick them
+As a robot, I want to pick scraps to increase my durability
+
+## schema of interaction
+
+![interaction pick scrap](pick_scrap.png)
+
+
 ## Testing with Property Based Testing
 
 Trying Quixir ? 
@@ -27,6 +38,12 @@ https://github.com/pragdave/quixir
 https://stackoverflow.com/questions/39243025/enums-in-elixir
 https://stackoverflow.com/questions/29977776/what-does-type-t-module-mean-in-elixir
 https://elixirschool.com/en/lessons/advanced/typespec/
+
+## Agent vs GenServer
+https://stackoverflow.com/questions/57107324/when-to-use-agent-instead-of-genserver-in-elixir
+https://awochna.com/2017/03/03/elixir-state-management.html
+https://crypt.codemancers.com/posts/2020-08-28-real-world-usecase-for-genserver-agent-in-elixir/
+
 
 ## Installation
 
