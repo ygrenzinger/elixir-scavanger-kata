@@ -35,10 +35,10 @@ defmodule RobotScavanger do
 
   defp moveForwardByOrientation(),
     do: %{
-      :north => fn pos -> %{pos | y: pos.y + 1} end,
-      :south => fn pos -> %{pos | y: pos.y - 1} end,
-      :east => fn pos -> %{pos | x: pos.x + 1} end,
-      :west => fn pos -> %{pos | x: pos.x - 1} end
+      north: fn pos -> %{pos | y: pos.y + 1} end,
+      south: fn pos -> %{pos | y: pos.y - 1} end,
+      east: fn pos -> %{pos | x: pos.x + 1} end,
+      west: fn pos -> %{pos | x: pos.x - 1} end
     }
 
   def moveForward(robot = %{orientation: orientation, position: position}) do
