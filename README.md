@@ -22,7 +22,7 @@ Inspired by some [Nash equilibrium and game thoery](https://en.wikipedia.org/wik
 
 As a robot, I want to move on the world to reach a destination   
 As a robot, I want to know where are scraps to pick them  
-As a robot, I want to pick scraps to increase my durability
+As a robot, I want to pick scraps to increase my durability  
 
 ## schema of interaction
 
