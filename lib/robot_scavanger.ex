@@ -6,42 +6,45 @@ defmodule RobotScavanger do
 
   ## Examples
 
-      iex> RobotScavanger.createRobot()
+      iex> RobotScavanger.create_robot()
       %RobotScavanger{position: %{x: 0, y: 0}, orientation: :north}
 
-      iex> RobotScavanger.createRobot(%{x: 1, y: -1}, :south)
+      iex> RobotScavanger.create_robot(%{x: 1, y: -1}, :south)
       %RobotScavanger{position: %{x: 1, y: -1}, orientation: :south}
 
   """
-  def createRobot(pos \\ %{x: 0, y: 0}, orientation \\ :north)
+  def create_robot(pos \\ %{x: 0, y: 0}, orientation \\ :north)
       when orientation in [:north, :south, :west, :east],
       do: %RobotScavanger{position: pos, orientation: orientation}
 
-  def turnRight(robot = %{orientation: orientation}),
-    do: %RobotScavanger{robot | orientation: nextOrientation(orientation)}
+  def turn_right(robot = %{orientation: orientation}),
+    do: %RobotScavanger{robot | orientation: next_orientation(orientation)}
 
-  defp nextOrientation(:north), do: :east
-  defp nextOrientation(:west), do: :north
-  defp nextOrientation(:south), do: :west
-  defp nextOrientation(:east), do: :south
+  defp next_orientation(:north), do: :east
+  defp next_orientation(:west), do: :north
+  defp next_orientation(:south), do: :west
+  defp next_orientation(:east), do: :south
 
-  def turnLeft(robot = %{orientation: orientation}),
-    do: %RobotScavanger{robot | orientation: previousOrientation(orientation)}
+  def turn_left(robot = %{orientation: orientation}),
+    do: %RobotScavanger{robot | orientation: previous_orientation(orientation)}
 
-  defp previousOrientation(:north), do: :west
-  defp previousOrientation(:west), do: :south
-  defp previousOrientation(:south), do: :east
-  defp previousOrientation(:east), do: :north
+  defp previous_orientation(:north), do: :west
+  defp previous_orientation(:west), do: :south
+  defp previous_orientation(:south), do: :east
+  defp previous_orientation(:east), do: :north
 
-  defp moveForwardByOrientation(),
+  def move_forward(robot = %{orientation: orientation, position: position}) do
+    %RobotScavanger{
+      robot
+      | position: Map.get(move_forward_by_orientation(), orientation).(position)
+    }
+  end
+
+  defp move_forward_by_orientation(),
     do: %{
       north: fn pos -> %{pos | y: pos.y + 1} end,
       south: fn pos -> %{pos | y: pos.y - 1} end,
       east: fn pos -> %{pos | x: pos.x + 1} end,
       west: fn pos -> %{pos | x: pos.x - 1} end
     }
-
-  def moveForward(robot = %{orientation: orientation, position: position}) do
-    %RobotScavanger{robot | position: Map.get(moveForwardByOrientation(), orientation).(position)}
-  end
 end
