@@ -5,6 +5,10 @@ defmodule RobotScavangerAgent do
     Agent.start_link(fn -> RobotScavanger.create_robot(pos) end)
   end
 
+  def create(pos) do
+    start_link(pos)
+  end
+
   def get_position(robot) do
     Agent.get(robot, fn robot -> robot.position end)
   end
