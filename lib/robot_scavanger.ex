@@ -1,5 +1,5 @@
 defmodule RobotScavanger do
-  defstruct(position: %{x: 0, y: 0}, orientation: :north)
+  defstruct position: %{x: 0, y: 0}, orientation: :north
 
   @doc """
   Create a new Robot
