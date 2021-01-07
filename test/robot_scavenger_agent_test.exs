@@ -3,6 +3,7 @@ defmodule RobotScavangerAgentTest do
 
   setup do
     {:ok, robot} = RobotScavangerAgent.start_link(%{x: 2, y: -2})
+    WorldAgent.create(5, 5)
     %{robot: robot}
   end
 

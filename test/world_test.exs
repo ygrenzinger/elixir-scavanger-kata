@@ -1,11 +1,11 @@
 defmodule WorldTest do
   use ExUnit.Case
 
-    
-  test "New world is created with a fixed size" do
-    world = World.create(2, 3)
 
-    assert World.print(world) == """
+  test "New world is created with a fixed size" do
+    WorldAgent.create(2, 3)
+
+    assert WorldAgent.print() == """
     __
     __
     __
@@ -13,32 +13,34 @@ defmodule WorldTest do
   end
 
   test "Create the simplest world ever" do
-    world = World.create(1, 1)
+    WorldAgent.create(1, 1)
 
-    assert World.print(world) == """
+    assert WorldAgent.print() == """
     _
     """
   end
 
   test "Add robot in the world" do
-    world = World.create(2, 2)
+    WorldAgent.create(2, 2)
+    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 0})
 
-    {:ok, world, _} = World.addRobot(world, 0, 0)
+    WorldAgent.add_robot(robot_pid)
 
-    assert World.print(world) == """
+    assert WorldAgent.print() == """
     R_
     __
     """
   end
 
   test "Move robot in the world" do
-    world = World.create(2, 2)
+    WorldAgent.create(2, 2)
+    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 0})
 
-    {:ok, world, robot} = World.addRobot(world, 1, 1)
+    WorldAgent.add_robot(robot_pid)
 
-    {:ok, world, robot} = World.apply_command(world, robot, :move_forward)
+    RobotScavangerAgent.move_forward(robot_pid)
 
-    assert World.print(world) == """
+    assert WorldAgent.print() == """
     _R
     __
     """

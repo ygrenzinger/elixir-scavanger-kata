@@ -10,17 +10,24 @@ defmodule World do
         %World{width: width, height: height, field: field}
     end
 
-    def createRow(width) do 
+    defp createRow(width) do
         Enum.map(1..width, fn _ -> :lowland end)
     end
 
-    def addRobot(world, x, y) do
-        {_, robot_pid} = RobotScavangerAgent.create(%{x: x, y: y})
+    def add_robot(world, robot_pid) do
+        %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
         updatedField = List.update_at(world.field, y, &updateRow(&1, x, robot_pid))
-        {:ok, %{ world | field: updatedField }, robot_pid}
+        %{ world | field: updatedField }
     end
 
-    def updateRow(row, x, elmt) do
+    def robot_has_moved(world, robot_pid) do
+        %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
+        field = Enum.map(1..world.height, fn _ -> createRow(world.width) end)
+        updatedField = List.update_at(field, x, &updateRow(&1, y, robot_pid))
+        %{ world | field: updatedField }
+    end
+
+    defp updateRow(row, x, elmt) do
         List.update_at(row, x, fn _ -> elmt end)
     end
 
