@@ -21,10 +21,22 @@ defmodule World do
     end
 
     def robot_has_moved(world, robot_pid) do
-        %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
+        # %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
+        %{x: x, y: y} = get_robot_position(world, robot_pid)
         field = Enum.map(1..world.height, fn _ -> createRow(world.width) end)
         updatedField = List.update_at(field, x, &updateRow(&1, y, robot_pid))
         %{ world | field: updatedField }
+    end
+
+    defp get_robot_position(world, robot) do
+        flatten = Enum.flat_map(world.field, fn row -> row end)
+        i = Enum.find_index(flatten, fn element -> element == robot end)
+        IO.inspect({i, world.width, world.height})
+        x = rem(i, world.width)
+        y = div(i, world.width)
+        %{x: x, y: y}
+        # x = Enum.find_index(world.field, fn row -> find_robot_in_row(row, robot) != nil end)
+        # y = find_robot_in_row(x)
     end
 
     defp updateRow(row, x, elmt) do

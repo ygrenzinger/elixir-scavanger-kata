@@ -1,4 +1,5 @@
 defmodule WorldAgent do
+    alias RobotScavangerAgent
     use Agent
 
     def start_link(width, height) do
@@ -19,5 +20,9 @@ defmodule WorldAgent do
 
     def robot_has_moved(robot_pid) do
         Agent.update(__MODULE__, &World.robot_has_moved(&1, robot_pid))
+    end
+
+    def robot_move_forward(robot_pid) do
+        RobotScavangerAgent.move_forward(robot_pid)
     end
 end

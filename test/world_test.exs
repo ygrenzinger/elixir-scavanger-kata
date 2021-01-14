@@ -38,7 +38,7 @@ defmodule WorldTest do
 
     WorldAgent.add_robot(robot_pid)
 
-    RobotScavangerAgent.move_forward(robot_pid)
+    WorldAgent.robot_move_forward(robot_pid)
 
     assert WorldAgent.print() == """
     _R
