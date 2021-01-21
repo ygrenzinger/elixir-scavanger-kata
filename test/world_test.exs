@@ -21,27 +21,35 @@ defmodule WorldTest do
   end
 
   test "Add robot in the world" do
-    WorldAgent.create(2, 2)
-    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 0})
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 1})
 
     WorldAgent.add_robot(robot_pid)
 
     assert WorldAgent.print() == """
+    __
     R_
     __
     """
   end
 
   test "Move robot in the world" do
-    WorldAgent.create(2, 2)
-    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 0})
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create(%{x: 0, y: 1})
 
     WorldAgent.add_robot(robot_pid)
+
+    assert WorldAgent.print() == """
+    __
+    R_
+    __
+    """
 
     WorldAgent.robot_move_forward(robot_pid)
 
     assert WorldAgent.print() == """
-    _R
+    R_
+    __
     __
     """
   end

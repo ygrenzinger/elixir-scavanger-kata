@@ -59,15 +59,15 @@ defmodule RobotScavangerTest do
   for {title, departure, orientation, arrival} <- [
         {
           "Can move forward south",
-          [x: 1, y: 1],
+          [x: 1, y: 0],
           "south",
-          [x: 1, y: 0]
+          [x: 1, y: 1]
         },
         {
           "Can move forward north",
-          [x: 1, y: 1],
+          [x: 1, y: 2],
           "north",
-          [x: 1, y: 2]
+          [x: 1, y: 1]
         },
         {
           "Can move forward east",
@@ -96,11 +96,11 @@ defmodule RobotScavangerTest do
 
   test "Can move forward twice north" do
     robot =
-      RobotScavanger.create_robot(%{x: 1, y: 1}, :north)
+      RobotScavanger.create_robot(%{x: 1, y: 3}, :north)
       |> RobotScavanger.move_forward()
       |> RobotScavanger.move_forward()
 
     assert robot.position.x == 1
-    assert robot.position.y == 3
+    assert robot.position.y == 1
   end
 end

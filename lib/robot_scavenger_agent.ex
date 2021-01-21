@@ -28,4 +28,8 @@ defmodule RobotScavangerAgent do
     WorldAgent.robot_has_moved(robot)
     robot
   end
+
+  def move_forward(robot, pos) do
+    Agent.update(robot, &RobotScavanger.move_forward(&1, pos))
+  end
 end

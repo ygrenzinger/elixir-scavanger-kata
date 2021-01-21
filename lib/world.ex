@@ -21,10 +21,12 @@ defmodule World do
     end
 
     def robot_has_moved(world, robot_pid) do
-        # %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
-        %{x: x, y: y} = get_robot_position(world, robot_pid)
+        #%{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
+        %{x: x, y: y} = RobotScavangerAgent.move_forward(robot_pid, get_robot_position(world, robot_pid))
+        IO.inspect(%{x: x, y: y})
         field = Enum.map(1..world.height, fn _ -> createRow(world.width) end)
-        updatedField = List.update_at(field, x, &updateRow(&1, y, robot_pid))
+        updatedField = List.update_at(field, y, &updateRow(&1, x, robot_pid))
+        
         %{ world | field: updatedField }
     end
 
@@ -35,8 +37,6 @@ defmodule World do
         x = rem(i, world.width)
         y = div(i, world.width)
         %{x: x, y: y}
-        # x = Enum.find_index(world.field, fn row -> find_robot_in_row(row, robot) != nil end)
-        # y = find_robot_in_row(x)
     end
 
     defp updateRow(row, x, elmt) do
