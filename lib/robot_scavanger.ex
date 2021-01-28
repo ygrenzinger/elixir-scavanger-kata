@@ -1,5 +1,5 @@
 defmodule RobotScavanger do
-  defstruct position: %{x: 0, y: 0}, orientation: :north
+  defstruct orientation: :north
 
   @doc """
   Create a new Robot
@@ -7,15 +7,14 @@ defmodule RobotScavanger do
   ## Examples
 
       iex> RobotScavanger.create_robot()
-      %RobotScavanger{position: %{x: 0, y: 0}, orientation: :north}
-
-      iex> RobotScavanger.create_robot(%{x: 1, y: -1}, :south)
-      %RobotScavanger{position: %{x: 1, y: -1}, orientation: :south}
+      %RobotScavanger{ orientation: :north}
+      iex> RobotScavanger.create_robot(:south)
+      %RobotScavanger{orientation: :south}
 
   """
-  def create_robot(pos \\ %{x: 0, y: 0}, orientation \\ :north)
+  def create_robot(orientation \\ :north)
       when orientation in [:north, :south, :west, :east],
-      do: %RobotScavanger{position: pos, orientation: orientation}
+      do: %RobotScavanger{orientation: orientation}
 
   def turn_right(robot = %{orientation: orientation}),
     do: %RobotScavanger{robot | orientation: next_orientation(orientation)}
@@ -33,11 +32,8 @@ defmodule RobotScavanger do
   defp previous_orientation(:south), do: :east
   defp previous_orientation(:east), do: :north
 
-  def move_forward(robot = %{orientation: orientation, position: position}) do
-    %RobotScavanger{
-      robot
-      | position: Map.get(move_forward_by_orientation(), orientation).(position)
-    }
+  def move_forward(robot = %{orientation: orientation}, position) do
+    Map.get(move_forward_by_orientation(), orientation).(position)
   end
 
   defp move_forward_by_orientation(),

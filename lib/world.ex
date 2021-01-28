@@ -14,13 +14,13 @@ defmodule World do
         Enum.map(1..width, fn _ -> :lowland end)
     end
 
-    def add_robot(world, robot_pid) do
-        %{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
+    def add_robot(world, robot_pid, position) do
+        %{x: x, y: y} = position
         updatedField = List.update_at(world.field, y, &updateRow(&1, x, robot_pid))
         %{ world | field: updatedField }
     end
 
-    def robot_has_moved(world, robot_pid) do
+    def robot_move_forward(world, robot_pid) do
         #%{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
         %{x: x, y: y} = RobotScavangerAgent.move_forward(robot_pid, get_robot_position(world, robot_pid))
         IO.inspect(%{x: x, y: y})
