@@ -30,7 +30,6 @@ defmodule World do
     defp get_robot_position(world, robot) do
         flatten = Enum.flat_map(world.field, fn row -> row end)
         i = Enum.find_index(flatten, fn element -> element == robot end)
-        IO.inspect({i, world.width, world.height})
         x = rem(i, world.width)
         y = div(i, world.width)
         %{x: x, y: y}

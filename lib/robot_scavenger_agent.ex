@@ -18,8 +18,8 @@ defmodule RobotScavangerAgent do
     Agent.update(robot, &RobotScavanger.turn_left(&1))
     robot
   end
-  
-  def move_forward(robot_pid, pos) do
-    Agent.get(robot_pid, &RobotScavanger.move_forward(&1, pos))
+
+  def move_forward(robot, pos) do
+    Agent.get(robot, &RobotScavanger.move_forward(&1, pos))
   end
 end

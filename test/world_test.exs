@@ -53,4 +53,22 @@ defmodule WorldTest do
     __
     """
   end
+
+  test "Rotate and move robot in the world" do
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+
+    WorldAgent.add_robot(robot_pid, %{x: 1, y: 1})
+
+    robot_pid |> RobotScavangerAgent.turn_right
+      |> RobotScavangerAgent.turn_right
+      |> RobotScavangerAgent.turn_right
+      |> WorldAgent.robot_move_forward
+
+    assert WorldAgent.print() == """
+    __
+    R_
+    __
+    """
+  end
 end
