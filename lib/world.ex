@@ -21,12 +21,9 @@ defmodule World do
     end
 
     def robot_move_forward(world, robot_pid) do
-        #%{x: x, y: y} = RobotScavangerAgent.get_position(robot_pid)
         %{x: x, y: y} = RobotScavangerAgent.move_forward(robot_pid, get_robot_position(world, robot_pid))
-        IO.inspect(%{x: x, y: y})
         field = Enum.map(1..world.height, fn _ -> createRow(world.width) end)
         updatedField = List.update_at(field, y, &updateRow(&1, x, robot_pid))
-        
         %{ world | field: updatedField }
     end
 
