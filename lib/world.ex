@@ -15,12 +15,19 @@ defmodule World do
 
     def robot_move_forward(world, robot_pid) do
         robot_position = world.robots[robot_pid]
-        new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position)
+        new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position) 
+        new_position = donut(world, new_position)
         if can_robot_move(world, new_position) do
             %{ world | robots: Map.put(world.robots, robot_pid, new_position)}
         else
             world
         end
+    end
+
+    defp donut(world, position) do
+        %{ position | 
+            y: rem(position.y + world.height, world.height),
+            x: rem(position.x + world.width, world.width) }
     end
 
     defp can_robot_move(world, position) do

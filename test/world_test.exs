@@ -121,4 +121,22 @@ defmodule WorldTest do
     __
     """
   end
+
+  test "The world is a donut" do
+    WorldAgent.create(3, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+
+    WorldAgent.add_robot(robot_pid, %{x: 0, y: 0})
+    
+    WorldAgent.robot_move_forward(robot_pid)
+    RobotScavangerAgent.turn_left(robot_pid)
+    WorldAgent.robot_move_forward(robot_pid)
+
+
+    assert WorldAgent.print() == """
+    ___
+    ___
+    __R
+    """
+  end
 end
