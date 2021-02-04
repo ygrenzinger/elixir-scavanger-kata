@@ -1,58 +1,34 @@
 defmodule World do
-    defstruct width: nil, height: nil, field: nil
+    defstruct width: nil, height: nil, robots: %{}
 
     def apply_command(world, robot, :move_forward) do
         {:ok, world, robot}
     end
 
     def create(width, height) do
-        field = Enum.map(1..height, fn _ -> createRow(width) end)
-        %World{width: width, height: height, field: field}
-    end
-
-    defp createRow(width) do
-        Enum.map(1..width, fn _ -> :lowland end)
+        %World{width: width, height: height}
     end
 
     def add_robot(world, robot_pid, position) do
-        %{x: x, y: y} = position
-        updatedField = List.update_at(world.field, y, &updateRow(&1, x, robot_pid))
-        %{ world | field: updatedField }
+        %{ world | robots: Map.put(world.robots, robot_pid, position) }
     end
 
     def robot_move_forward(world, robot_pid) do
-        %{x: x, y: y} = RobotScavangerAgent.move_forward(robot_pid, get_robot_position(world, robot_pid))
-        field = Enum.map(1..world.height, fn _ -> createRow(world.width) end)
-        updatedField = List.update_at(field, y, &updateRow(&1, x, robot_pid))
-        %{ world | field: updatedField }
-    end
-
-    defp get_robot_position(world, robot) do
-        flatten = Enum.flat_map(world.field, fn row -> row end)
-        i = Enum.find_index(flatten, fn element -> element == robot end)
-        x = rem(i, world.width)
-        y = div(i, world.width)
-        %{x: x, y: y}
-    end
-
-    defp updateRow(row, x, elmt) do
-        List.update_at(row, x, fn _ -> elmt end)
+        robot_position = world.robots[robot_pid]
+        new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position)
+        %{ world | robots: Map.put(world.robots, robot_pid, new_position)}
     end
 
     def print(world) do
-        if world.field == nil do
-            ""
-        else
-            Enum.join(Enum.map(world.field, fn row -> printRow(row) end), "\n")  <> "\n"
-        end
+        Enum.join(Enum.map(0..(world.height - 1), &printRow(&1, world)), "\n")  <> "\n"
     end
 
-    defp printRow(row) do
-        Enum.join(Enum.map(row, &printSquare(&1)))
+    defp printRow(y, world) do
+        Enum.join(Enum.map(0..(world.width - 1), &printSquare(&1, y, world)))
     end
 
-    defp printSquare(square) do
-        if is_pid(square) do
+    defp printSquare(x, y, world) do
+        if Enum.member?(Map.values(world.robots), %{x: x, y: y}) do
             "R"
         else
             "_"
