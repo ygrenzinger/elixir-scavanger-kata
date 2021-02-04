@@ -16,7 +16,15 @@ defmodule World do
     def robot_move_forward(world, robot_pid) do
         robot_position = world.robots[robot_pid]
         new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position)
-        %{ world | robots: Map.put(world.robots, robot_pid, new_position)}
+        if can_robot_move(world, new_position) do
+            %{ world | robots: Map.put(world.robots, robot_pid, new_position)}
+        else
+            world
+        end
+    end
+
+    defp can_robot_move(world, position) do
+        !Enum.member?(Map.values(world.robots), position)
     end
 
     def print(world) do

@@ -48,6 +48,24 @@ defmodule WorldTest do
     """
   end
 
+  test "A robot can't move if there is another robot at existing position" do
+    WorldAgent.create(2, 3)
+    {_, first_robot_pid} = RobotScavangerAgent.create()
+    {_, second_robot_pid} = RobotScavangerAgent.create()
+
+    WorldAgent.add_robot(first_robot_pid, %{x: 0, y: 1})
+    WorldAgent.add_robot(second_robot_pid, %{x: 0, y: 2})
+    
+    WorldAgent.robot_move_forward(second_robot_pid)
+    WorldAgent.robot_move_forward(second_robot_pid)
+
+    assert WorldAgent.print() == """
+    __
+    R_
+    R_
+    """
+  end
+
   test "Add two robots in the world and the first robot move forward" do
     WorldAgent.create(2, 3)
     {_, first_robot_pid} = RobotScavangerAgent.create()
