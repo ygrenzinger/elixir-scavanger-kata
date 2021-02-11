@@ -139,4 +139,36 @@ defmodule WorldTest do
     __R
     """
   end
+
+  test "A robot moving on a scrap can take it and increase its durability" do
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+
+   assert RobotScavangerAgent.get_durability(robot_pid) == 10
+
+    WorldAgent.add_robot(robot_pid, %{x: 1, y: 1})
+    WorldAgent.add_scrap(10, %{x: 1, y: 0})
+
+    WorldAgent.robot_move_forward(robot_pid)
+
+   assert RobotScavangerAgent.get_durability(robot_pid) == 20
+  end
+
+  test "A second robot moving after a previous robot to a scrap position should not take it." do
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+    {_, robot_2_pid} = RobotScavangerAgent.create()
+    robot_2_pid |> RobotScavangerAgent.turn_left
+
+    WorldAgent.add_robot(robot_pid, %{x: 1, y: 1})
+    WorldAgent.add_robot(robot_2_pid, %{x: 2, y: 0})
+    WorldAgent.add_scrap(10, %{x: 1, y: 0})
+
+    WorldAgent.robot_move_forward(robot_pid)
+    WorldAgent.robot_move_forward(robot_pid)
+    WorldAgent.robot_move_forward(robot_2_pid)
+
+    assert RobotScavangerAgent.get_durability(robot_pid) == 20
+    assert RobotScavangerAgent.get_durability(robot_2_pid) == 10
+  end
 end

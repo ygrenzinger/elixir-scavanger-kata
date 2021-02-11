@@ -1,5 +1,5 @@
 defmodule RobotScavanger do
-  defstruct orientation: :north
+  defstruct orientation: :north, durability: 10
 
   @doc """
   Create a new Robot
@@ -15,6 +15,14 @@ defmodule RobotScavanger do
   def create_robot(orientation \\ :north)
       when orientation in [:north, :south, :west, :east],
       do: %RobotScavanger{orientation: orientation}
+
+  def get_durability(robot) do
+    robot.durability
+  end
+
+  def update_durability(robot, scrap) do
+    %RobotScavanger{robot | durability: robot.durability + scrap }
+  end
 
   def turn_right(robot = %{orientation: orientation}),
     do: %RobotScavanger{robot | orientation: next_orientation(orientation)}
@@ -32,7 +40,7 @@ defmodule RobotScavanger do
   defp previous_orientation(:south), do: :east
   defp previous_orientation(:east), do: :north
 
-  def move_forward(robot = %{orientation: orientation}, position) do
+  def move_forward(%{orientation: orientation}, position) do
     Map.get(move_forward_by_orientation(), orientation).(position)
   end
 
