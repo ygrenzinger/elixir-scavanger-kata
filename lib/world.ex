@@ -20,16 +20,19 @@ defmodule World do
     def robot_move_forward(world, robot_pid) do
         robot_position = world.robots[robot_pid]
         new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position)
-        scrap_value = world.scraps[new_position]
-        if scrap_value != nil do
-            RobotScavangerAgent.update_durability(robot_pid, scrap_value)
-             %{ world | 
-                robots: Map.put(world.robots, robot_pid, new_position), 
-                scraps: Map.delete(world.scraps, new_position) }
-        else 
-            %{ world | robots: Map.put(world.robots, robot_pid, new_position) }
-        end
+        %{ grab_scraps(world, new_position, robot_pid) | 
+            robots: Map.put(world.robots, robot_pid, new_position) }
     end
+
+    defp grab_scraps(world, position, robot_pid) do 
+        scrap_value = world.scraps[position]
+        if scrap_value != nil do
+          RobotScavangerAgent.update_durability(robot_pid, scrap_value)
+          %{ world | scraps: Map.delete(world.scraps, position) }
+        else 
+            world
+        end
+    end 
 
     def print(world) do
         Enum.join(Enum.map(0..(world.height - 1), &printRow(&1, world)), "\n")  <> "\n"
