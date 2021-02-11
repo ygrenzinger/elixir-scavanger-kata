@@ -23,8 +23,12 @@ defmodule World do
         scrap_value = world.scraps[new_position]
         if scrap_value != nil do
             RobotScavangerAgent.update_durability(robot_pid, scrap_value)
+             %{ world | 
+                robots: Map.put(world.robots, robot_pid, new_position), 
+                scraps: Map.delete(world.scraps, new_position) }
+        else 
+            %{ world | robots: Map.put(world.robots, robot_pid, new_position) }
         end
-        %{ world | robots: Map.put(world.robots, robot_pid, new_position)}
     end
 
     def print(world) do
