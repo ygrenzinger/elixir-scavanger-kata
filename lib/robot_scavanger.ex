@@ -21,7 +21,7 @@ defmodule RobotScavanger do
   end
 
   def update_durability(robot, scrap) do
-    %RobotScavanger{robot | durability: robot.durability + scrap }
+    %RobotScavanger{robot | durability: robot.durability + scrap}
   end
 
   def turn_right(robot = %{orientation: orientation}),
