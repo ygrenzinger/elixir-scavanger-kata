@@ -22,4 +22,12 @@ defmodule RobotScavangerAgent do
   def move_forward(robot, pos) do
     Agent.get(robot, &RobotScavanger.move_forward(&1, pos))
   end
+
+  def get_durability(robot) do
+    Agent.get(robot, &RobotScavanger.get_durability(&1))
+  end
+
+  def update_durability(robot, scrap) do
+    Agent.update(robot, &RobotScavanger.update_durability(&1, scrap))
+  end
 end

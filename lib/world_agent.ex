@@ -10,6 +10,10 @@ defmodule WorldAgent do
         start_link(width, height)
     end
 
+    def add_scrap(scrap_value, position) do
+        Agent.update(__MODULE__, &World.add_scrap(&1, scrap_value, position))
+    end
+
     def add_robot(robot_pid, position) do
         Agent.update(__MODULE__, fn world -> World.add_robot(world, robot_pid, position) end)
     end

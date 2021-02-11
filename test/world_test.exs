@@ -103,4 +103,19 @@ defmodule WorldTest do
     __
     """
   end
+
+  test "A robot moving on a scrap can take it and increase its durability" do
+    WorldAgent.create(2, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+
+   assert RobotScavangerAgent.get_durability(robot_pid) == 10
+
+    WorldAgent.add_robot(robot_pid, %{x: 1, y: 1})
+    WorldAgent.add_scrap(10, %{x: 1, y: 0})
+
+    WorldAgent.robot_move_forward(robot_pid)
+
+   assert RobotScavangerAgent.get_durability(robot_pid) == 20
+
+  end
 end
