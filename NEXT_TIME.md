@@ -1,4 +1,4 @@
 # TODO LIST NEXT TIME
 
-- Ajouter un second robot dans le monde
-- Refactoring pour passer en map a la place de la matrice
+- Ajouter la feraille qui puisse être ramassée et on ajoute le concept de durabilité
+- PBT pour le donut
