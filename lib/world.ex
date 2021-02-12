@@ -24,7 +24,7 @@ defmodule World do
 
     if can_robot_move(world, new_position) do
       %{
-        grab_scraps(world, new_position, robot_pid)
+        grab_scraps_if_any(world, new_position, robot_pid)
         | robots: Map.put(world.robots, robot_pid, new_position)
       }
     else
@@ -44,7 +44,7 @@ defmodule World do
     !Enum.member?(Map.values(world.robots), position)
   end
 
-  defp grab_scraps(world, position, robot_pid) do
+  defp grab_scraps_if_any(world, position, robot_pid) do
     scrap_value = world.scraps[position]
 
     if scrap_value != nil do
