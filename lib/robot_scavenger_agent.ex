@@ -1,12 +1,12 @@
 defmodule RobotScavangerAgent do
   use Agent
 
-  def start_link() do
-    Agent.start_link(fn -> RobotScavanger.create_robot() end)
+  def start_link(orientation) do
+    Agent.start_link(fn -> RobotScavanger.create_robot(orientation) end)
   end
 
-  def create() do
-    start_link()
+  def create(orientation \\ :north) do
+    start_link(orientation)
   end
 
   def turn_right(robot) do
