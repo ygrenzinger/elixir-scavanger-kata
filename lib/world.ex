@@ -13,8 +13,20 @@ defmodule World do
     %{world | scraps: Map.put(world.scraps, position, scrap)}
   end
 
+  def is_scrap_at(world, position) do
+    Map.has_key?(world.scraps, position)
+  end
+
+  def get_scrap_positions(world) do
+    world.scraps |> Map.keys
+  end
+
   def add_robot(world, robot_pid, position) do
     %{world | robots: Map.put(world.robots, robot_pid, position)}
+  end
+
+  def get_robot_position(world, robot_pid) do
+    world.robots[robot_pid]
   end
 
   def robot_move_forward(world, robot_pid) do

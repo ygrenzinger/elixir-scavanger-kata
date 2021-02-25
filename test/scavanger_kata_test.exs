@@ -160,5 +160,32 @@ defmodule ScavangerKataTest do
     assert RobotScavangerAgent.get_durability(robot_pid) == 20
     assert RobotScavangerAgent.get_durability(robot_2_pid) == 10
   end
+
+  test "The robot knows location of a scrap and try to pick it" do
+    WorldAgent.create(3, 3)
+    {_, robot_pid} = RobotScavangerAgent.create()
+    WorldAgent.add_robot(robot_pid, %{x: 0, y: 0})
+    WorldAgent.add_scrap(10, %{x: 2, y: 2})
+    assert WorldAgent.is_scrap_at(%{x: 2, y: 2}) == true
+
+    RobotScavangerAgent.do_stuff(robot_pid)
+
+    assert WorldAgent.get_robot_position(robot_pid) == %{x: 2, y: 2}
+    assert RobotScavangerAgent.get_durability(robot_pid) == 20
+    assert WorldAgent.is_scrap_at(%{x: 2, y: 2}) == false
+  end
+
+  test "The robot knows location of scraps and try to pick them as fast as possible" do
+    WorldAgent.create(8, 8)
+    {_, robot_pid} = RobotScavangerAgent.create()
+    WorldAgent.add_robot(robot_pid, %{x: 2, y: 2})
+    WorldAgent.add_scrap(10, %{x: 0, y: 0})
+    WorldAgent.add_scrap(10, %{x: 5, y: 8})
+
+    RobotScavangerAgent.do_stuff(robot_pid)
+
+    #assert WorldAgent.get_robot_position(robot_pid) == %{x: 0, y: 0}
+    assert RobotScavangerAgent.get_durability(robot_pid) == 30
+  end
   
 end

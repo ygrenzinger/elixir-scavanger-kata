@@ -30,4 +30,23 @@ defmodule RobotScavangerAgent do
   def update_durability(robot, scrap) do
     Agent.update(robot, &RobotScavanger.update_durability(&1, scrap))
   end
+
+  def do_stuff(robot) do
+    %{x: scrap_x, y: scrap_y} = WorldAgent.get_scrap_positions() |> List.first()
+    %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
+
+    robot
+    |> turn_right() 
+    |> move_forward_times(scrap_x - robot_x) 
+    |> turn_right()
+    |> move_forward_times(scrap_y - robot_y) 
+  end
+
+  defp move_forward_times(robot, times) do 
+    Enum.each(0..(times - 1), fn _ -> 
+      WorldAgent.robot_move_forward(robot)
+    end)
+    robot
+  end
+
 end
