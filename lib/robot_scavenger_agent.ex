@@ -32,7 +32,30 @@ defmodule RobotScavangerAgent do
   end
 
   def do_stuff(robot) do
-    %{x: scrap_x, y: scrap_y} = WorldAgent.get_scrap_positions() |> List.first()
+    # %{x: scrap_x, y: scrap_y} = WorldAgent.get_scrap_positions() |> List.first()
+    # %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
+
+    # robot
+    # |> turn_to(x_orientation_target(scrap_x, robot_x))
+    # |> move_forward_times(scrap_x - robot_x)
+    # |> turn_to(y_orientation_target(scrap_y, robot_y))
+    # |> move_forward_times(scrap_y - robot_y)
+
+    # if Enum.empty?(WorldAgent.get_scrap_positions()) do
+    #   robot
+    # else
+    #   do_stuff(robot)
+    # end
+
+    do_stuff(robot, WorldAgent.get_scrap_positions())
+  end
+
+  defp do_stuff(robot, [] = scraps) do
+    robot
+  end
+
+  defp do_stuff(robot, [scrap|tail] = scraps) do
+    %{x: scrap_x, y: scrap_y} = scrap
     %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
 
     robot
@@ -41,29 +64,8 @@ defmodule RobotScavangerAgent do
     |> turn_to(y_orientation_target(scrap_y, robot_y))
     |> move_forward_times(scrap_y - robot_y)
 
-    if Enum.empty?(WorldAgent.get_scrap_positions()) do
-      robot
-    else
-      do_stuff(robot)
-    end
+    do_stuff(robot, WorldAgent.get_scrap_positions())
   end
-
-  # defp do_stuff(robot, [] = scraps) do
-  #   robot
-  # end
-
-  # defp do_stuff(robot, [scrap|tail] = scraps) do
-  #   %{x: scrap_x, y: scrap_y} = scrap
-  #   %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
-
-  #   robot
-  #   |> turn_to(x_orientation_target(scrap_x, robot_x))
-  #   |> move_forward_times(scrap_x - robot_x)
-  #   |> turn_to(y_orientation_target(scrap_y, robot_y))
-  #   |> move_forward_times(scrap_y - robot_y)
-
-  #   do_stuff(robot, tail)
-  # end
 
   defp x_orientation_target(scrap_x, robot_x) do
     if scrap_x > robot_x do 
