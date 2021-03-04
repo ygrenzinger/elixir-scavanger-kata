@@ -36,14 +36,45 @@ defmodule RobotScavangerAgent do
     %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
 
     robot
-    |> turn_right() 
-    |> move_forward_times(scrap_x - robot_x) 
-    |> turn_right()
-    |> move_forward_times(scrap_y - robot_y) 
+    |> turn_to(x_orientation_target(scrap_x, robot_x))
+    |> move_forward_times(scrap_x - robot_x)
+    |> turn_to(y_orientation_target(scrap_y, robot_y))
+    |> move_forward_times(scrap_y - robot_y)
+  end
+
+  defp x_orientation_target(scrap_x, robot_x) do
+    if scrap_x > robot_x do 
+      :east
+    else
+      :west
+    end
+  end
+
+  defp y_orientation_target(scrap_y, robot_y) do
+    if scrap_y > robot_y do 
+      :south
+    else
+      :north
+    end
+  end
+
+  defp turn_to(robot, orientation) do
+    currentOrientation = get_orientation(robot)
+    if currentOrientation != orientation do 
+      robot
+      |> turn_left()
+      |> turn_to(orientation)
+    else
+      robot
+    end
+  end
+
+  defp get_orientation(robot) do
+    Agent.get(robot, &RobotScavanger.get_orientation(&1))
   end
 
   defp move_forward_times(robot, times) do 
-    Enum.each(0..(times - 1), fn _ -> 
+    Enum.each(0..abs(times) - 1, fn _ -> 
       WorldAgent.robot_move_forward(robot)
     end)
     robot

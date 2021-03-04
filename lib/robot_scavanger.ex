@@ -20,6 +20,10 @@ defmodule RobotScavanger do
     robot.durability
   end
 
+  def get_orientation(robot) do
+    robot.orientation
+  end
+
   def update_durability(robot, scrap) do
     %RobotScavanger{robot | durability: robot.durability + scrap}
   end
