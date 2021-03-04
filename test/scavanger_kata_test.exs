@@ -200,4 +200,9 @@ defmodule ScavangerKataTest do
     assert RobotScavangerAgent.get_durability(robot_pid) == 30
   end
   
+  test "The robots will got to nearest scrap" do
+    # Please write me
+    assert false
+  end
+
 end
