@@ -201,8 +201,27 @@ defmodule ScavangerKataTest do
   end
   
   test "The robots will got to nearest scrap" do
-    # Please write me
-    assert false
+    IO.puts "The robots will got to nearest scrap"
+
+    WorldAgent.create(100, 100)
+    
+    {_, robot_pid} = RobotScavangerAgent.create()
+    {_, robot_2_pid} = RobotScavangerAgent.create()
+
+    WorldAgent.add_robot(robot_pid, %{x: 0, y: 0})
+    WorldAgent.add_robot(robot_2_pid, %{x: 90, y: 90})
+
+    WorldAgent.add_scrap(10, %{x: 10, y: 7})
+    WorldAgent.add_scrap(10, %{x: 80, y: 82})
+
+    robot_task1 = RobotScavangerAgent.search_and_peek(robot_pid)
+    robot_task2 = RobotScavangerAgent.search_and_peek(robot_2_pid)
+
+    Task.await_many([robot_task1, robot_task2])
+
+    # assert WorldAgent.no_more_scrap?()
+    assert RobotScavangerAgent.get_durability(robot_pid) == 20
+    assert RobotScavangerAgent.get_durability(robot_2_pid) == 20
   end
 
 end

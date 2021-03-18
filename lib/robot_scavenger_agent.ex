@@ -31,6 +31,10 @@ defmodule RobotScavangerAgent do
     Agent.update(robot, &RobotScavanger.update_durability(&1, scrap))
   end
 
+  def search_and_peek(robot) do
+    Task.async(fn -> do_stuff(robot) end)
+  end
+
   def do_stuff(robot) do
     # %{x: scrap_x, y: scrap_y} = WorldAgent.get_scrap_positions() |> List.first()
     # %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
