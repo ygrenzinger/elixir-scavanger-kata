@@ -206,13 +206,18 @@ defmodule ScavangerKataTest do
 
     WorldAgent.create(10, 10)
     
-    {_, robot_pid} = RobotScavangerAgent.create(:north, 100)
-    {_, robot_2_pid} = RobotScavangerAgent.create(:north, 1)
+    {_, robot_pid} = RobotScavangerAgent.create(:north, 1)
+    IO.puts("robot 1 PID:")
+    IO.inspect(robot_pid)
+    {_, robot_2_pid} = RobotScavangerAgent.create(:north, 10)
+    IO.puts("robot 2 PID:")
+    IO.inspect(robot_2_pid)
 
     WorldAgent.add_robot(robot_pid, %{x: 0, y: 0})
     WorldAgent.add_robot(robot_2_pid, %{x: 9, y: 9})
 
     WorldAgent.add_scrap(10, %{x: 1, y: 2})
+    WorldAgent.add_scrap(10, %{x: 3, y: 3})
     WorldAgent.add_scrap(10, %{x: 8, y: 8})
 
     robot_task1 = RobotScavangerAgent.search_and_peek(robot_pid)
@@ -221,7 +226,7 @@ defmodule ScavangerKataTest do
     Task.await_many([robot_task1, robot_task2])
 
     # assert WorldAgent.no_more_scrap?()
-    assert RobotScavangerAgent.get_durability(robot_pid) == 20
+    assert RobotScavangerAgent.get_durability(robot_pid) == 30
     assert RobotScavangerAgent.get_durability(robot_2_pid) == 20
   end
 

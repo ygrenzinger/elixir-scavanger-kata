@@ -57,7 +57,9 @@ defmodule RobotScavangerAgent do
 
     ## distance formula d = sqrt((x1 - x2)^2 + (y1 - y2)^2)
     scraps = WorldAgent.get_scrap_positions()
+    IO.inspect(scraps)
     robot_position = WorldAgent.get_robot_position(robot)
+    IO.inspect({robot, robot_position})
     peek(robot, sort(scraps, robot_position))
   end
 
@@ -83,7 +85,7 @@ defmodule RobotScavangerAgent do
     |> turn_to(y_orientation_target(scrap_y, robot_y))
     |> move_forward_times(scrap_y - robot_y)
 
-    peek(robot, WorldAgent.get_scrap_positions())
+    peek(robot)
   end
 
   defp x_orientation_target(scrap_x, robot_x) do
