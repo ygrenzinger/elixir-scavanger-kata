@@ -168,7 +168,7 @@ defmodule ScavangerKataTest do
     WorldAgent.add_scrap(10, %{x: 2, y: 2})
     assert WorldAgent.is_scrap_at(%{x: 2, y: 2}) == true
 
-    RobotScavangerAgent.do_stuff(robot_pid)
+    RobotScavangerAgent.peek(robot_pid)
 
     assert WorldAgent.get_robot_position(robot_pid) == %{x: 2, y: 2}
     assert RobotScavangerAgent.get_durability(robot_pid) == 20
@@ -181,7 +181,7 @@ defmodule ScavangerKataTest do
     WorldAgent.add_robot(robot_pid, %{x: 2, y: 2})
     WorldAgent.add_scrap(10, %{x: 0, y: 0})
 
-    RobotScavangerAgent.do_stuff(robot_pid)
+    RobotScavangerAgent.peek(robot_pid)
 
     assert WorldAgent.get_robot_position(robot_pid) == %{x: 0, y: 0}
     assert RobotScavangerAgent.get_durability(robot_pid) == 20
@@ -194,25 +194,26 @@ defmodule ScavangerKataTest do
     WorldAgent.add_scrap(10, %{x: 0, y: 0})
     WorldAgent.add_scrap(10, %{x: 5, y: 7})
 
-    RobotScavangerAgent.do_stuff(robot_pid)
+    RobotScavangerAgent.peek(robot_pid)
 
     # assert WorldAgent.get_robot_position(robot_pid) == %{x: 0, y: 0}
     assert RobotScavangerAgent.get_durability(robot_pid) == 30
   end
   
+  @tag :wip
   test "The robots will got to nearest scrap" do
     IO.puts "The robots will got to nearest scrap"
 
-    WorldAgent.create(100, 100)
+    WorldAgent.create(10, 10)
     
-    {_, robot_pid} = RobotScavangerAgent.create()
-    {_, robot_2_pid} = RobotScavangerAgent.create()
+    {_, robot_pid} = RobotScavangerAgent.create(:north, 100)
+    {_, robot_2_pid} = RobotScavangerAgent.create(:north, 1)
 
     WorldAgent.add_robot(robot_pid, %{x: 0, y: 0})
-    WorldAgent.add_robot(robot_2_pid, %{x: 90, y: 90})
+    WorldAgent.add_robot(robot_2_pid, %{x: 9, y: 9})
 
-    WorldAgent.add_scrap(10, %{x: 10, y: 7})
-    WorldAgent.add_scrap(10, %{x: 80, y: 82})
+    WorldAgent.add_scrap(10, %{x: 1, y: 2})
+    WorldAgent.add_scrap(10, %{x: 8, y: 8})
 
     robot_task1 = RobotScavangerAgent.search_and_peek(robot_pid)
     robot_task2 = RobotScavangerAgent.search_and_peek(robot_2_pid)

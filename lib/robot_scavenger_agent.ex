@@ -1,12 +1,12 @@
 defmodule RobotScavangerAgent do
   use Agent
 
-  def start_link(orientation) do
-    Agent.start_link(fn -> RobotScavanger.create_robot(orientation) end)
+  def start_link(orientation, speed) do
+    Agent.start_link(fn -> RobotScavanger.create_robot(orientation, speed) end)
   end
 
-  def create(orientation \\ :north) do
-    start_link(orientation)
+  def create(orientation \\ :north, speed \\ 1) do
+    start_link(orientation, speed)
   end
 
   def turn_right(robot) do
@@ -27,15 +27,19 @@ defmodule RobotScavangerAgent do
     Agent.get(robot, &RobotScavanger.get_durability(&1))
   end
 
+  def get_speed(robot) do
+    Agent.get(robot, &RobotScavanger.get_speed(&1))
+  end
+
   def update_durability(robot, scrap) do
     Agent.update(robot, &RobotScavanger.update_durability(&1, scrap))
   end
 
   def search_and_peek(robot) do
-    Task.async(fn -> do_stuff(robot) end)
+    Task.async(fn -> peek(robot) end)
   end
 
-  def do_stuff(robot) do
+  def peek(robot) do
     # %{x: scrap_x, y: scrap_y} = WorldAgent.get_scrap_positions() |> List.first()
     # %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
 
@@ -51,14 +55,25 @@ defmodule RobotScavangerAgent do
     #   do_stuff(robot)
     # end
 
-    do_stuff(robot, WorldAgent.get_scrap_positions())
+    ## distance formula d = sqrt((x1 - x2)^2 + (y1 - y2)^2)
+    scraps = WorldAgent.get_scrap_positions()
+    robot_position = WorldAgent.get_robot_position(robot)
+    peek(robot, sort(scraps, robot_position))
   end
 
-  defp do_stuff(robot, [] = scraps) do
+  defp sort(scraps, robot_position) do    
+    Enum.sort(scraps, fn scrap1, scrap2 -> distance(scrap1, robot_position) > distance(scrap2, robot_position) end)
+  end
+
+  defp distance(%{x: x1, y: y1}, %{x: x2, y: y2}) do
+    :math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
+  end
+
+  defp peek(robot, [] = scraps) do
     robot
   end
 
-  defp do_stuff(robot, [scrap|tail] = scraps) do
+  defp peek(robot, [scrap|tail] = scraps) do
     %{x: scrap_x, y: scrap_y} = scrap
     %{x: robot_x, y: robot_y} = WorldAgent.get_robot_position(robot)
 
@@ -68,7 +83,7 @@ defmodule RobotScavangerAgent do
     |> turn_to(y_orientation_target(scrap_y, robot_y))
     |> move_forward_times(scrap_y - robot_y)
 
-    do_stuff(robot, WorldAgent.get_scrap_positions())
+    peek(robot, WorldAgent.get_scrap_positions())
   end
 
   defp x_orientation_target(scrap_x, robot_x) do
