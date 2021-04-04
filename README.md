@@ -5,16 +5,16 @@
 - a robot can move forward on the map (advancing on the square in the direction it face)
 - a robot can turn left or right
 - a robot has a durability score of 10
-- a robot can scavange scrap on the map
-- the map has a size and is "round" aka a robot moving at the top appears at the bottom and at the left appears at the right (and vice versa)
+- a robot can scavange scrap on the map and gain 1 of durability each time
+- the map has a size and is like a "donut" aka a robot moving at the top appears at the bottom and at the left appears at the right (and vice versa)
 - a map can have multiple robots
 - robots knows where scrap or other robots are due to an old satelitte giving clue :)
-- a robot can fight or collaborate with another robot when they meet on the same  square with the following rules:
+- (better idea ?) a robot can fight or collaborate with another robot when they meet on the same  square with the following rules:
 
 | Stategy     | Attack | Collaborate |
 | ----------- | ------ | ----------- |
-| Attack      | -2,-2  | 2,-2        |
-| Collaborate | -2,2   | 1,1         |
+| Attack      | -5,-5  | 5,-5        |
+| Collaborate | -5,5   | 3,3         |
 
 Inspired by some [Nash equilibrium and game thoery](https://en.wikipedia.org/wiki/Nash_equilibrium#Nash_Equilibrium) :D 
 
@@ -43,6 +43,13 @@ https://elixirschool.com/en/lessons/advanced/typespec/
 https://stackoverflow.com/questions/57107324/when-to-use-agent-instead-of-genserver-in-elixir  
 https://awochna.com/2017/03/03/elixir-state-management.html  
 https://crypt.codemancers.com/posts/2020-08-28-real-world-usecase-for-genserver-agent-in-elixir/  
+
+## Retro on the first try - 2021/04/01
+![retrospective](retro.png)  
+Actions  
+- One driver by session
+- Write functional needs
+- Architecture schema for a strategic vision 
 
 
 ## Installation
