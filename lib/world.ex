@@ -1,85 +1,41 @@
 defmodule World do
-  defstruct width: nil, height: nil, robots: %{}, scraps: %{}
+  use GenServer
 
-  def apply_command(world, robot, :move_forward) do
-    {:ok, world, robot}
+  # private(API)
+
+  def init(%{height: height, width: width}) when height < 1 or width < 1 do
+    {:error, "width and height should be stricly positive"}
   end
 
-  def create(width, height) do
-    %World{width: width, height: height}
-  end
-
-  def add_scrap(world, scrap, position) do
-    %{world | scraps: Map.put(world.scraps, position, scrap)}
-  end
-
-  def is_scrap_at(world, position) do
-    Map.has_key?(world.scraps, position)
-  end
-
-  def get_scrap_positions(world) do
-    world.scraps |> Map.keys
-  end
-
-  def add_robot(world, robot_pid, position) do
-    %{world | robots: Map.put(world.robots, robot_pid, position)}
-  end
-
-  def get_robot_position(world, robot_pid) do
-    world.robots[robot_pid]
-  end
-
-  def robot_move_forward(world, robot_pid) do
-    robot_position = world.robots[robot_pid]
-    new_position = RobotScavangerAgent.move_forward(robot_pid, robot_position)
-    new_position = donut(world, new_position)
-
-    if can_robot_move(world, new_position) do
-      %{
-        grab_scraps_if_any(world, new_position, robot_pid)
-        | robots: Map.put(world.robots, robot_pid, new_position)
-      }
-    else
-      world
-    end
-  end
-
-  defp donut(world, position) do
-    %{
-      position
-      | y: rem(position.y + world.height, world.height),
-        x: rem(position.x + world.width, world.width)
+  def init(opts) do
+    state = %{
+      size: opts
     }
+
+    {:ok, state}
   end
 
-  defp can_robot_move(world, position) do
-    !Enum.member?(Map.values(world.robots), position)
+  def handle_call(:get_map, from, state) do
+    IO.inspect(from)
+    %{width: width, height: height} = state.size
+
+    map =
+      Enum.map(1..height, fn _ ->
+        Enum.map(1..width, fn _ ->
+          :desert
+        end)
+      end)
+
+    {:reply, {:ok, map}, state}
   end
 
-  defp grab_scraps_if_any(world, position, robot_pid) do
-    scrap_value = world.scraps[position]
+  # public(API)
 
-    if scrap_value != nil do
-      RobotScavangerAgent.update_durability(robot_pid, scrap_value)
-      %{world | scraps: Map.delete(world.scraps, position)}
-    else
-      world
-    end
+  def start_link(initial_state) do
+    GenServer.start_link(__MODULE__, initial_state)
   end
 
-  def print(world) do
-    Enum.join(Enum.map(0..(world.height - 1), &printRow(&1, world)), "\n") <> "\n"
-  end
-
-  defp printRow(y, world) do
-    Enum.join(Enum.map(0..(world.width - 1), &printSquare(&1, y, world)))
-  end
-
-  defp printSquare(x, y, world) do
-    if Enum.member?(Map.values(world.robots), %{x: x, y: y}) do
-      "R"
-    else
-      "_"
-    end
+  def get_map(world) do
+    GenServer.call(world, :get_map)
   end
 end
