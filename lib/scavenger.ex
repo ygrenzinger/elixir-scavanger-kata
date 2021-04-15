@@ -1,18 +1,16 @@
 defmodule Scavenger do
-  @moduledoc """
-  Documentation for `Scavenger`.
-  """
+  use GenServer
 
-  @doc """
-  Hello world.
+  # private (API)
 
-  ## Examples
+  def init(_opts) do
+    state = %{}
+    {:ok, state}
+  end
 
-      iex> Scavenger.hello()
-      :world
+  # public (API)
 
-  """
-  def hello do
-    :world
+  def start_link(initial_state \\ %{}) do
+    GenServer.start_link(__MODULE__, initial_state)
   end
 end

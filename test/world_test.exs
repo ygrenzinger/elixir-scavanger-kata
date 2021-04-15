@@ -32,6 +32,17 @@ defmodule WorldTest do
     size = %{height: 3, width: 3}
     {:ok, world} = World.start_link(size)
 
-    assert(1 == 0)
+    {:ok, scavenger_pid} = Scavenger.start_link()
+    World.add_robot(world, scavenger_pid, 0, 0)
+
+    {:ok, map} = World.get_map(world)
+    assert(
+      map ==
+      [
+        [scavenger_pid, :desert, :desert],
+        [:desert, :desert, :desert],
+        [:desert, :desert, :desert]
+      ]
+    )
   end
 end

@@ -9,7 +9,8 @@ defmodule World do
 
   def init(opts) do
     state = %{
-      size: opts
+      size: opts,
+      locations: %{}
     }
 
     {:ok, state}
@@ -17,16 +18,26 @@ defmodule World do
 
   def handle_call(:get_map, from, state) do
     IO.inspect(from)
+    IO.inspect(state)
     %{width: width, height: height} = state.size
 
     map =
-      Enum.map(1..height, fn _ ->
-        Enum.map(1..width, fn _ ->
-          :desert
+      Enum.map(0..height - 1, fn y ->
+        Enum.map(0..width - 1, fn x ->
+          Map.get(state.locations, {x, y}, :desert)
         end)
       end)
 
     {:reply, {:ok, map}, state}
+  end
+
+  def handle_call({:add_robot, scavenger_pid, x, y}, from, state) do
+    state = %{
+      size: state.size,
+      locations: %{{x, y} => scavenger_pid}
+    }
+
+    {:reply, :ok, state}
   end
 
   # public(API)
@@ -37,5 +48,9 @@ defmodule World do
 
   def get_map(world) do
     GenServer.call(world, :get_map)
+  end
+
+  def add_robot(world, scavenger_pid, x, y) do
+    GenServer.call(world, {:add_robot, scavenger_pid, x, y})
   end
 end
