@@ -61,4 +61,8 @@ defmodule WorldTest do
       {:error, "you should call Elon and explain why you loose 100M DOGE. "}
     )
   end
+
+  test "add a second robot not to the same place of the first one" do
+    assert(1 == 0)
+  end
 end
