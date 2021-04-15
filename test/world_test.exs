@@ -63,6 +63,6 @@ defmodule WorldTest do
   end
 
   test "add a second robot not to the same place of the first one" do
-    assert(1 == 0)
+    raise("Not implemented yet.")
   end
 end
