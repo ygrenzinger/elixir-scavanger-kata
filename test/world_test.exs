@@ -45,4 +45,20 @@ defmodule WorldTest do
       ]
     )
   end
+
+  test "add a second robot to the same place" do
+    size = %{height: 3, width: 3}
+    {:ok, world} = World.start_link(size)
+
+    {:ok, scavenger_pid} = Scavenger.start_link()
+    {:ok, scavenger_pid2} = Scavenger.start_link()
+    World.add_robot(world, scavenger_pid, 0, 0)
+
+    result = World.add_robot(world, scavenger_pid2, 0, 0)
+
+    assert(
+      result ==
+      {:error, "you should call Elon and explain why you loose 100M DOGE. "}
+    )
+  end
 end

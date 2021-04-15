@@ -32,12 +32,15 @@ defmodule World do
   end
 
   def handle_call({:add_robot, scavenger_pid, x, y}, from, state) do
-    state = %{
-      size: state.size,
-      locations: %{{x, y} => scavenger_pid}
-    }
-
-    {:reply, :ok, state}
+    if Map.has_key?(state.locations, {x, y}) do
+      {:reply, {:error, "you should call Elon and explain why you loose 100M DOGE. "}, state}
+    else
+      state = %{
+        size: state.size,
+        locations: %{{x, y} => scavenger_pid}
+      }
+      {:reply, :ok, state}
+    end
   end
 
   # public(API)
