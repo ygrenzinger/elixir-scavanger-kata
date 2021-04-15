@@ -81,4 +81,8 @@ defmodule WorldTest do
       ]
     )
   end
+
+  test "add scrap on the map" do
+    raise "Not implemented yet !"
+  end
 end
