@@ -37,7 +37,7 @@ defmodule World do
     else
       state = %{
         size: state.size,
-        locations: %{{x, y} => scavenger_pid}
+        locations: Map.put(state.locations, {x, y}, scavenger_pid)
       }
       {:reply, :ok, state}
     end

@@ -63,6 +63,22 @@ defmodule WorldTest do
   end
 
   test "add a second robot not to the same place of the first one" do
-    raise("Not implemented yet.")
+    size = %{height: 3, width: 3}
+    {:ok, world} = World.start_link(size)
+
+    {:ok, scavenger_pid} = Scavenger.start_link()
+    {:ok, scavenger_pid2} = Scavenger.start_link()
+    World.add_robot(world, scavenger_pid, 0, 0)
+    World.add_robot(world, scavenger_pid2, 1, 0)
+
+    {:ok, map} = World.get_map(world)
+    assert(
+      map ==
+      [
+        [scavenger_pid, scavenger_pid2, :desert],
+        [:desert, :desert, :desert],
+        [:desert, :desert, :desert]
+      ]
+    )
   end
 end
