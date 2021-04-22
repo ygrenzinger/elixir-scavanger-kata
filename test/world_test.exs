@@ -30,7 +30,7 @@ defmodule WorldTest do
   end
 
   test "add a robot", state do
-    {:ok, scavenger_pid} = Scavenger.start_link()
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger_pid, 0, 0)
 
     {:ok, map} = World.get_map(state.world)
@@ -46,8 +46,8 @@ defmodule WorldTest do
 
   test "add a second robot to the same place", state do
 
-    {:ok, scavenger_pid} = Scavenger.start_link()
-    {:ok, scavenger_pid2} = Scavenger.start_link()
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    {:ok, scavenger_pid2} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger_pid, 0, 0)
 
     result = World.add_robot(state.world, scavenger_pid2, 0, 0)
@@ -59,8 +59,8 @@ defmodule WorldTest do
   end
 
   test "add a second robot not to the same place of the first one", state do
-    {:ok, scavenger_pid} = Scavenger.start_link()
-    {:ok, scavenger_pid2} = Scavenger.start_link()
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    {:ok, scavenger_pid2} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger_pid, 0, 0)
     World.add_robot(state.world, scavenger_pid2, 1, 0)
 
@@ -89,4 +89,20 @@ defmodule WorldTest do
     )
   end
 
+  test "move robot to the north", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 1)
+
+    Scavenger.move(scavenger_pid, :north)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:scrap, scavenger_pid, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
 end

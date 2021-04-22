@@ -53,6 +53,11 @@ defmodule World do
     end
   end
 
+  def handle_call({:move_scavenger, scavenger, :north}, from, state) do
+    # Map.new(map, fn {key, val} -> {val, key} end)
+      {:reply, :ok, state}
+  end
+
   # public(API)
 
   def start_link(initial_state) do
@@ -69,5 +74,9 @@ defmodule World do
 
   def add_scrap(world, x, y) do
     GenServer.call(world, {:add_scrap, x, y})
+  end
+
+  def move_scavenger(world, scavenger, direction) do
+    GenServer.call(world, {:move_scavenger, scavenger, direction})
   end
 end
