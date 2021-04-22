@@ -83,6 +83,19 @@ defmodule WorldTest do
   end
 
   test "add scrap on the map" do
-    raise "Not implemented yet !"
+    size = %{height: 3, width: 3}
+    {:ok, world} = World.start_link(size)
+
+    World.add_scrap(world, 0, 0);
+
+    {:ok, map} = World.get_map(world)
+    assert(
+      map ==
+        [
+          [:scrap, :desert, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
   end
 end

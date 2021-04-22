@@ -17,8 +17,6 @@ defmodule World do
   end
 
   def handle_call(:get_map, from, state) do
-    IO.inspect(from)
-    IO.inspect(state)
     %{width: width, height: height} = state.size
 
     map =
@@ -43,6 +41,18 @@ defmodule World do
     end
   end
 
+  def handle_call({:add_scrap, x, y}, from, state) do
+    if Map.has_key?(state.locations, {x, y}) do
+      {:reply, {:error, "There is already something here"}, state}
+    else
+      state = %{
+        size: state.size,
+        locations: Map.put(state.locations, {x, y}, :scrap)
+      }
+      {:reply, :ok, state}
+    end
+  end
+
   # public(API)
 
   def start_link(initial_state) do
@@ -55,5 +65,9 @@ defmodule World do
 
   def add_robot(world, scavenger_pid, x, y) do
     GenServer.call(world, {:add_robot, scavenger_pid, x, y})
+  end
+
+  def add_scrap(world, x, y) do
+    GenServer.call(world, {:add_scrap, x, y})
   end
 end
