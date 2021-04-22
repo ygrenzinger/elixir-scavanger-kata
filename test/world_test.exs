@@ -1,17 +1,18 @@
 defmodule WorldTest do
   use ExUnit.Case
 
-  test "should create world as a process" do
+  setup do
     size = %{height: 3, width: 3}
     {:ok, world} = World.start_link(size)
-    assert(is_pid(world))
+    {:ok, world: world}
   end
 
-  test "should create world full of :desert of 3x3" do
-    size = %{height: 3, width: 3}
-    {:ok, world} = World.start_link(size)
+  test "should create world as a process", state do
+    assert(is_pid(state.world))
+  end
 
-    {:ok, map} = World.get_map(world)
+  test "should create world full of :desert of 3x3", state do
+    {:ok, map} = World.get_map(state.world)
 
     assert(
       map ==
@@ -28,14 +29,11 @@ defmodule WorldTest do
     {:error, msg} = World.start_link(size)
   end
 
-  test "add a robot" do
-    size = %{height: 3, width: 3}
-    {:ok, world} = World.start_link(size)
-
+  test "add a robot", state do
     {:ok, scavenger_pid} = Scavenger.start_link()
-    World.add_robot(world, scavenger_pid, 0, 0)
+    World.add_robot(state.world, scavenger_pid, 0, 0)
 
-    {:ok, map} = World.get_map(world)
+    {:ok, map} = World.get_map(state.world)
     assert(
       map ==
       [
@@ -46,15 +44,13 @@ defmodule WorldTest do
     )
   end
 
-  test "add a second robot to the same place" do
-    size = %{height: 3, width: 3}
-    {:ok, world} = World.start_link(size)
+  test "add a second robot to the same place", state do
 
     {:ok, scavenger_pid} = Scavenger.start_link()
     {:ok, scavenger_pid2} = Scavenger.start_link()
-    World.add_robot(world, scavenger_pid, 0, 0)
+    World.add_robot(state.world, scavenger_pid, 0, 0)
 
-    result = World.add_robot(world, scavenger_pid2, 0, 0)
+    result = World.add_robot(state.world, scavenger_pid2, 0, 0)
 
     assert(
       result ==
@@ -62,16 +58,13 @@ defmodule WorldTest do
     )
   end
 
-  test "add a second robot not to the same place of the first one" do
-    size = %{height: 3, width: 3}
-    {:ok, world} = World.start_link(size)
-
+  test "add a second robot not to the same place of the first one", state do
     {:ok, scavenger_pid} = Scavenger.start_link()
     {:ok, scavenger_pid2} = Scavenger.start_link()
-    World.add_robot(world, scavenger_pid, 0, 0)
-    World.add_robot(world, scavenger_pid2, 1, 0)
+    World.add_robot(state.world, scavenger_pid, 0, 0)
+    World.add_robot(state.world, scavenger_pid2, 1, 0)
 
-    {:ok, map} = World.get_map(world)
+    {:ok, map} = World.get_map(state.world)
     assert(
       map ==
       [
@@ -82,13 +75,10 @@ defmodule WorldTest do
     )
   end
 
-  test "add scrap on the map" do
-    size = %{height: 3, width: 3}
-    {:ok, world} = World.start_link(size)
+  test "add scrap on the map", state do
+    World.add_scrap(state.world, 0, 0);
 
-    World.add_scrap(world, 0, 0);
-
-    {:ok, map} = World.get_map(world)
+    {:ok, map} = World.get_map(state.world)
     assert(
       map ==
         [
@@ -98,4 +88,5 @@ defmodule WorldTest do
         ]
     )
   end
+
 end
