@@ -54,19 +54,19 @@ defmodule World do
   end
 
   def handle_call({:move_scavenger, scavenger, :north}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x, y - 1} end)
+    handle_move(state, scavenger, fn {x, y} -> {x, rem(y - 1 + state.size.height, state.size.height)} end)
   end
   
   def handle_call({:move_scavenger, scavenger, :south}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x, y + 1} end)
+    handle_move(state, scavenger, fn {x, y} -> {x, rem(y + 1 + state.size.height, state.size.height)} end)
   end
 
   def handle_call({:move_scavenger, scavenger, :east}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x + 1, y} end)
+    handle_move(state, scavenger, fn {x, y} -> {rem(x + 1 + state.size.width, state.size.width), y} end)
   end
 
   def handle_call({:move_scavenger, scavenger, :west}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x - 1, y} end)
+    handle_move(state, scavenger, fn {x, y} -> {rem(x - 1 + state.size.width, state.size.width), y} end)
   end
 
   defp handle_move(state, scavenger, moveFct) do

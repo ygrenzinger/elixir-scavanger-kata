@@ -156,4 +156,73 @@ defmodule WorldTest do
         ]
     )
   end
+
+  test "the world is a donut, go north", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 0)
+
+    Scavenger.move(scavenger_pid, :north)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert],
+          [:desert, scavenger_pid, :desert]
+        ]
+    )
+  end
+
+  test "the worl is a donut, go south", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 2)
+
+    Scavenger.move(scavenger_pid, :south)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, scavenger_pid, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
+
+  test "the worl is a donut, go east", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 2, 1)
+
+    Scavenger.move(scavenger_pid, :east)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [scavenger_pid, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
+
+  test "the worl is a donut, go west", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 0, 1)
+
+    Scavenger.move(scavenger_pid, :west)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [:desert, :desert, scavenger_pid],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
+
 end
