@@ -9,10 +9,10 @@ defmodule Scavenger do
 
   def handle_call({:move, direction}, _from, state) do
     World.move_scavenger(state.world, self(), direction)
+    {:reply, :ok, state}
   end
 
   # public (API)
-
   def start_link(initial_state \\ %{}) do
     GenServer.start_link(__MODULE__, initial_state)
   end

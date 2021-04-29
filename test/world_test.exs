@@ -26,7 +26,7 @@ defmodule WorldTest do
 
   test "should fail if init param is wrong" do
     size = %{height: 0, width: -1}
-    {:error, msg} = World.start_link(size)
+    {:error, _msg} = World.start_link(size)
   end
 
   test "add a robot", state do
@@ -99,8 +99,59 @@ defmodule WorldTest do
     assert(
       map ==
         [
-          [:scrap, scavenger_pid, :desert],
+          [:desert, scavenger_pid, :desert],
           [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
+
+  test "move robot to the south", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 1)
+
+    Scavenger.move(scavenger_pid, :south)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert],
+          [:desert, scavenger_pid, :desert]
+        ]
+    )
+  end
+
+  test "move robot to the east", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 1)
+
+    Scavenger.move(scavenger_pid, :east)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [:desert, :desert, scavenger_pid],
+          [:desert, :desert, :desert]
+        ]
+    )
+  end
+
+  test "move robot to the west", state do
+    {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger_pid, 1, 1)
+
+    Scavenger.move(scavenger_pid, :west)
+
+    {:ok, map} = World.get_map(state.world)
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [scavenger_pid, :desert, :desert],
           [:desert, :desert, :desert]
         ]
     )

@@ -16,7 +16,7 @@ defmodule World do
     {:ok, state}
   end
 
-  def handle_call(:get_map, from, state) do
+  def handle_call(:get_map, _from, state) do
     %{width: width, height: height} = state.size
 
     map =
@@ -29,7 +29,7 @@ defmodule World do
     {:reply, {:ok, map}, state}
   end
 
-  def handle_call({:add_robot, scavenger_pid, x, y}, from, state) do
+  def handle_call({:add_robot, scavenger_pid, x, y}, _from, state) do
     if Map.has_key?(state.locations, {x, y}) do
       {:reply, {:error, "you should call Elon and explain why you loose 100M DOGE. "}, state}
     else
@@ -41,7 +41,7 @@ defmodule World do
     end
   end
 
-  def handle_call({:add_scrap, x, y}, from, state) do
+  def handle_call({:add_scrap, x, y}, _from, state) do
     if Map.has_key?(state.locations, {x, y}) do
       {:reply, {:error, "There is already something here"}, state}
     else
@@ -53,9 +53,36 @@ defmodule World do
     end
   end
 
-  def handle_call({:move_scavenger, scavenger, :north}, from, state) do
-    # Map.new(map, fn {key, val} -> {val, key} end)
-      {:reply, :ok, state}
+  def handle_call({:move_scavenger, scavenger, :north}, _from, state) do
+    locations = state.locations
+    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x, y - 1} end)
+    {:reply, :ok, %{ state | locations: newLocations} }
+  end
+  
+  def handle_call({:move_scavenger, scavenger, :south}, _from, state) do
+    locations = state.locations
+    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x, y + 1} end)
+    {:reply, :ok, %{ state | locations: newLocations} }
+  end
+
+  def handle_call({:move_scavenger, scavenger, :east}, _from, state) do
+    locations = state.locations
+    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x + 1, y} end)
+    {:reply, :ok, %{ state | locations: newLocations} }
+  end
+
+  def handle_call({:move_scavenger, scavenger, :west}, _from, state) do
+    locations = state.locations
+    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x - 1, y} end)
+    {:reply, :ok, %{ state | locations: newLocations} }
+  end
+
+  defp move_scavenger_with(locations, scavenger, moveFct) do
+    robotToCoord = Map.new(locations, fn {key, val} -> {val, key} end)
+    {x, y} = Map.get(robotToCoord, scavenger)
+    locations
+      |> Map.put({x, y}, :desert)
+      |> Map.put(moveFct.({x , y }), scavenger)
   end
 
   # public(API)
