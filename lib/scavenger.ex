@@ -8,8 +8,8 @@ defmodule Scavenger do
   end
 
   def handle_call({:move, direction}, _from, state) do
-    World.move_scavenger(state.world, self(), direction)
-    {:reply, :ok, state}
+    response = World.move_scavenger(state.world, self(), direction)
+    {:reply, response, state}
   end
 
   # public (API)

@@ -71,16 +71,26 @@ defmodule World do
 
   defp handle_move(state, scavenger, moveFct) do
     locations = state.locations
-    newLocations = move_scavenger_with(locations, scavenger, moveFct)
-    {:reply, :ok, %{ state | locations: newLocations} }
+    
+    {x, y} = get_scavenger_coord(locations, scavenger)
+    newCoord = moveFct.({x , y })
+    
+    if can_go_on(locations, newCoord) do
+      {:reply, :ok, %{ state | locations: locations
+        |> Map.put({x, y}, :desert)
+        |> Map.put(newCoord, scavenger) } }
+    else
+      {:reply,  {:error, "can't move there"}, state }
+    end
   end
 
-  defp move_scavenger_with(locations, scavenger, moveFct) do
+  defp get_scavenger_coord(locations, scavenger) do 
     robotToCoord = Map.new(locations, fn {key, val} -> {val, key} end)
     {x, y} = Map.get(robotToCoord, scavenger)
-    locations
-      |> Map.put({x, y}, :desert)
-      |> Map.put(moveFct.({x , y }), scavenger)
+  end
+
+  defp can_go_on(locations, {x, y}) do
+    not is_pid(Map.get(locations, {x, y}))
   end
 
   # public(API)
