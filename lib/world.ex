@@ -54,26 +54,24 @@ defmodule World do
   end
 
   def handle_call({:move_scavenger, scavenger, :north}, _from, state) do
-    locations = state.locations
-    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x, y - 1} end)
-    {:reply, :ok, %{ state | locations: newLocations} }
+    handle_move(state, scavenger, fn {x, y} -> {x, y - 1} end)
   end
   
   def handle_call({:move_scavenger, scavenger, :south}, _from, state) do
-    locations = state.locations
-    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x, y + 1} end)
-    {:reply, :ok, %{ state | locations: newLocations} }
+    handle_move(state, scavenger, fn {x, y} -> {x, y + 1} end)
   end
 
   def handle_call({:move_scavenger, scavenger, :east}, _from, state) do
-    locations = state.locations
-    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x + 1, y} end)
-    {:reply, :ok, %{ state | locations: newLocations} }
+    handle_move(state, scavenger, fn {x, y} -> {x + 1, y} end)
   end
 
   def handle_call({:move_scavenger, scavenger, :west}, _from, state) do
+    handle_move(state, scavenger, fn {x, y} -> {x - 1, y} end)
+  end
+
+  defp handle_move(state, scavenger, moveFct) do
     locations = state.locations
-    newLocations = move_scavenger_with(locations, scavenger, fn {x, y} -> {x - 1, y} end)
+    newLocations = move_scavenger_with(locations, scavenger, moveFct)
     {:reply, :ok, %{ state | locations: newLocations} }
   end
 
