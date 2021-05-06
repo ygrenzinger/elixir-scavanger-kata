@@ -20,8 +20,8 @@ defmodule World do
     %{width: width, height: height} = state.size
 
     map =
-      Enum.map(0..height - 1, fn y ->
-        Enum.map(0..width - 1, fn x ->
+      Enum.map(0..(height - 1), fn y ->
+        Enum.map(0..(width - 1), fn x ->
           Map.get(state.locations, {x, y}, :desert)
         end)
       end)
@@ -37,6 +37,7 @@ defmodule World do
         size: state.size,
         locations: Map.put(state.locations, {x, y}, scavenger_pid)
       }
+
       {:reply, :ok, state}
     end
   end
@@ -49,58 +50,68 @@ defmodule World do
         size: state.size,
         locations: Map.put(state.locations, {x, y}, :scrap)
       }
+
       {:reply, :ok, state}
     end
   end
 
   def handle_call({:move_scavenger, scavenger, :north}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x, rem(y - 1 + state.size.height, state.size.height)} end)
+    handle_move(state, scavenger, fn {x, y} ->
+      {x, rem(y - 1 + state.size.height, state.size.height)}
+    end)
   end
-  
+
   def handle_call({:move_scavenger, scavenger, :south}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {x, rem(y + 1 + state.size.height, state.size.height)} end)
+    handle_move(state, scavenger, fn {x, y} ->
+      {x, rem(y + 1 + state.size.height, state.size.height)}
+    end)
   end
 
   def handle_call({:move_scavenger, scavenger, :east}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {rem(x + 1 + state.size.width, state.size.width), y} end)
+    handle_move(state, scavenger, fn {x, y} ->
+      {rem(x + 1 + state.size.width, state.size.width), y}
+    end)
   end
 
   def handle_call({:move_scavenger, scavenger, :west}, _from, state) do
-    handle_move(state, scavenger, fn {x, y} -> {rem(x - 1 + state.size.width, state.size.width), y} end)
+    handle_move(state, scavenger, fn {x, y} ->
+      {rem(x - 1 + state.size.width, state.size.width), y}
+    end)
   end
 
   defp handle_move(state, scavenger, moveFct) do
     locations = state.locations
-    
+
     {x, y} = get_scavenger_coord(locations, scavenger)
-    newCoord = moveFct.({x , y })
-    
-    if can_go_on(locations, newCoord) do
-      if (is_scrap(locations, newCoord)) do
-        {:reply, {:ok, :scrap}, %{ state | locations: locations
-        |> Map.put({x, y}, :desert)
-        |> Map.put(newCoord, scavenger) } }
-      else
-        {:reply, :ok, %{ state | locations: locations
-          |> Map.put({x, y}, :desert)
-          |> Map.put(newCoord, scavenger) } }
-      end
-    else
-      {:reply,  {:error, "can't move there"}, state }
+    newCoord = moveFct.({x, y})
+
+    target = Map.get(locations, newCoord, :desert)
+
+    case target do
+      x when is_pid(x) ->
+        {:reply, {:error, "can't move there"}, state}
+
+      :scrap ->
+        {:reply, {:ok, :scrap}, move_to_new_coord(state, {x, y}, newCoord, scavenger)}
+
+      :desert ->
+        {:reply, :ok, move_to_new_coord(state, {x, y}, newCoord, scavenger)}
     end
   end
 
-  defp get_scavenger_coord(locations, scavenger) do 
+  defp move_to_new_coord(state, oldCoord, newCoord, scavenger) do
+    %{
+      state
+      | locations:
+          state.locations
+          |> Map.put(oldCoord, :desert)
+          |> Map.put(newCoord, scavenger)
+    }
+  end
+
+  defp get_scavenger_coord(locations, scavenger) do
     robotToCoord = Map.new(locations, fn {key, val} -> {val, key} end)
-    {x, y} = Map.get(robotToCoord, scavenger)
-  end
-
-  defp can_go_on(locations, coord) do
-    not is_pid(Map.get(locations, coord))
-  end
-
-  defp is_scrap(locations, coord) do
-    Map.get(locations, coord) == :scrap
+    Map.get(robotToCoord, scavenger)
   end
 
   # public(API)

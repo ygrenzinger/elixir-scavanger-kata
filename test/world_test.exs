@@ -34,18 +34,18 @@ defmodule WorldTest do
     World.add_robot(state.world, scavenger_pid, 0, 0)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
-      [
-        [scavenger_pid, :desert, :desert],
-        [:desert, :desert, :desert],
-        [:desert, :desert, :desert]
-      ]
+        [
+          [scavenger_pid, :desert, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
     )
   end
 
   test "add a second robot to the same place", state do
-
     {:ok, scavenger_pid} = Scavenger.start_link(%{world: state.world})
     {:ok, scavenger_pid2} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger_pid, 0, 0)
@@ -54,7 +54,7 @@ defmodule WorldTest do
 
     assert(
       result ==
-      {:error, "you should call Elon and explain why you loose 100M DOGE. "}
+        {:error, "you should call Elon and explain why you loose 100M DOGE. "}
     )
   end
 
@@ -65,20 +65,22 @@ defmodule WorldTest do
     World.add_robot(state.world, scavenger_pid2, 1, 0)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
-      [
-        [scavenger_pid, scavenger_pid2, :desert],
-        [:desert, :desert, :desert],
-        [:desert, :desert, :desert]
-      ]
+        [
+          [scavenger_pid, scavenger_pid2, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
     )
   end
 
   test "add scrap on the map", state do
-    World.add_scrap(state.world, 0, 0);
+    World.add_scrap(state.world, 0, 0)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -96,6 +98,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :north)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -113,6 +116,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :south)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -130,6 +134,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :east)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -147,6 +152,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :west)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -164,6 +170,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :north)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -181,6 +188,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :south)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -198,6 +206,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :east)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -215,6 +224,7 @@ defmodule WorldTest do
     Scavenger.move(scavenger_pid, :west)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -234,6 +244,7 @@ defmodule WorldTest do
     {:error, "can't move there"} = Scavenger.move(scavenger2, :east)
 
     {:ok, map} = World.get_map(state.world)
+
     assert(
       map ==
         [
@@ -262,5 +273,4 @@ defmodule WorldTest do
     durability = Scavenger.get_durability(scavenger)
     assert durability == 20
   end
-
 end

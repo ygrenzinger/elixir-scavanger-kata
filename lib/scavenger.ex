@@ -13,7 +13,7 @@ defmodule Scavenger do
   end
 
   defp handle_move_response(state, {:ok, :scrap}) do
-    {:reply, :ok, %{ state | durability: state.durability + 10 }}
+    {:reply, :ok, %{state | durability: state.durability + 10}}
   end
 
   defp handle_move_response(state, response) do
