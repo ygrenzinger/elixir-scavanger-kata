@@ -273,4 +273,25 @@ defmodule WorldTest do
     durability = Scavenger.get_durability(scavenger)
     assert durability == 20
   end
+
+  test "Scavenger should go the the nearst scrap", state do
+    {:ok, scavenger} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger, 1, 1)
+    World.add_scrap(state.world, 1, 0)
+
+    :ok = Scavenger.move_to_scrap(scavenger)
+
+    {:ok, map} = World.get_map(state.world)
+
+    assert(
+      map ==
+        [
+          [:desert, scavenger, :desert],
+          [:desert, :desert, :desert],
+          [:desert, :desert, :desert]
+        ]
+    )
+
+    assert Scavenger.get_durability(scavenger) == 20
+  end
 end

@@ -79,6 +79,15 @@ defmodule World do
     end)
   end
 
+  def handle_call(:get_scraps_locations, _from, state) do
+    scraps =
+      Map.to_list(state.locations)
+      |> Enum.filter(fn {_, el} -> el == :scrap end)
+      |> Enum.map(fn {coord, _} -> coord end)
+
+    {:reply, scraps, state}
+  end
+
   defp handle_move(state, scavenger, moveFct) do
     locations = state.locations
 
@@ -134,5 +143,9 @@ defmodule World do
 
   def move_scavenger(world, scavenger, direction) do
     GenServer.call(world, {:move_scavenger, scavenger, direction})
+  end
+
+  def get_scraps_locations(world) do
+    GenServer.call(world, :get_scraps_locations)
   end
 end

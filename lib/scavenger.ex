@@ -12,6 +12,13 @@ defmodule Scavenger do
     handle_move_response(state, response)
   end
 
+  def handle_call(:move_to_scrap, _from, state) do
+    scraps = World.get_scraps_locations(state.world)
+
+    response = World.move_scavenger(state.world, self(), :south)
+    handle_move_response(state, response)
+  end
+
   def handle_call(:get_durability, _from, state) do
     {:reply, state.durability, state}
   end
@@ -31,6 +38,10 @@ defmodule Scavenger do
 
   def move(scavenger, direction) do
     GenServer.call(scavenger, {:move, direction})
+  end
+
+  def move_to_scrap(scavenger) do
+    GenServer.call(scavenger, :move_to_scrap)
   end
 
   def get_durability(scavenger) do
