@@ -12,16 +12,16 @@ defmodule Scavenger do
     handle_move_response(state, response)
   end
 
+  def handle_call(:get_durability, _from, state) do
+    {:reply, state.durability, state}
+  end
+
   defp handle_move_response(state, {:ok, :scrap}) do
     {:reply, :ok, %{state | durability: state.durability + 10}}
   end
 
   defp handle_move_response(state, response) do
     {:reply, response, state}
-  end
-
-  def handle_call(:get_durability, _from, state) do
-    {:reply, state.durability, state}
   end
 
   # public (API)
