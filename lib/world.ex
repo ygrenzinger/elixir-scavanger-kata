@@ -88,6 +88,10 @@ defmodule World do
     {:reply, scraps, state}
   end
 
+  def handle_call({:get_scavenger_location, scavenger}, _, state) do
+    {:reply, get_scavenger_coord(state.locations, scavenger), state}
+  end
+
   defp handle_move(state, scavenger, moveFct) do
     locations = state.locations
 
@@ -147,5 +151,9 @@ defmodule World do
 
   def get_scraps_locations(world) do
     GenServer.call(world, :get_scraps_locations)
+  end
+
+  def get_scavenger_location(world, scavenger) do
+    GenServer.call(world, {:get_scavenger_location, scavenger})
   end
 end
