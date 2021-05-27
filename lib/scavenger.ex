@@ -9,8 +9,7 @@ defmodule Scavenger do
 
   def handle_call({:move, direction}, _from, state) do
     response = World.move_scavenger(state.world, self(), direction)
-    response = translate_response(response)
-    {:reply, response, handle_move_response(state, response)}
+    {:reply, build_move_response(response), update_state(state, response)}
   end
 
   def handle_call(:move_to_scrap, _from, state) do
@@ -22,9 +21,9 @@ defmodule Scavenger do
 
     commands = get_path_between_coords(scavenger_coord, scrap_coord)
 
-    Enum.each(commands, fn command ->
+    state = Enum.reduce(commands, state, fn command, state ->
       response = World.move_scavenger(state.world, self(), command)
-      state = handle_move_response(state, response)
+      update_state(state, response)
     end)
 
     {:reply, :ok, state}
@@ -34,12 +33,20 @@ defmodule Scavenger do
     {:reply, state.durability, state}
   end
 
-  defp handle_move_response(state, {:ok, :scrap}) do
+  defp update_state(state, {:ok, :scrap}) do
     %{state | durability: state.durability + 10}
   end
 
-  defp handle_move_response(state, response) do
+  defp update_state(state, response) do
     state
+  end
+
+  defp build_move_response({:ok, :scrap}) do
+    :ok
+  end
+
+  defp build_move_response(response) do
+     response
   end
 
   defp get_path_between_coords({start_x, start_y}, {end_x, end_y}) do
@@ -48,12 +55,16 @@ defmodule Scavenger do
 
     directions = []
 
-    if diff_y > 0 do
-      directions = directions ++ Enum.each(1..diff_y, fn _ -> :south end)
+    directions = directions ++ if diff_y > 0 do
+      Enum.map(1..diff_y, fn _ -> :north end)
+    else
+      []
     end
 
-    if diff_y < 0 do
-      directions = directions ++ Enum.each(1..abs(diff_y), fn _ -> :north end)
+    directions = directions ++ if diff_y < 0 do
+      Enum.map(1..abs(diff_y), fn _ -> :south end)
+    else
+      []
     end
 
     directions

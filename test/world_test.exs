@@ -268,7 +268,7 @@ defmodule WorldTest do
     World.add_robot(state.world, scavenger, 1, 1)
     World.add_scrap(state.world, 1, 2)
 
-    {:ok, scrap} = Scavenger.move(scavenger, :south)
+    :ok = Scavenger.move(scavenger, :south)
 
     durability = Scavenger.get_durability(scavenger)
     assert durability == 20
