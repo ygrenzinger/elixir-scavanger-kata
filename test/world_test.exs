@@ -315,4 +315,30 @@ defmodule WorldTest do
 
     assert Scavenger.get_durability(scavenger) == 20
   end
+
+  test "Scavengers try to go to the next nearest scrap in async", state do
+    {:ok, scavenger} = Scavenger.start_link(%{world: state.world})
+    {:ok, scavenger2} = Scavenger.start_link(%{world: state.world})
+    World.add_robot(state.world, scavenger, 0, 0)
+    World.add_robot(state.world, scavenger2, 2, 1)
+    World.add_scrap(state.world, 2, 2)
+    World.add_scrap(state.world, 0, 1)
+
+    :ok = Scavenger.move_to_scrap(scavenger)
+    :ok = Scavenger.move_to_scrap(scavenger2)
+
+    {:ok, map} = World.get_map(state.world)
+
+    assert(
+      map ==
+        [
+          [:desert, :desert, :desert],
+          [scavenger, :desert, :desert],
+          [:desert, :desert, scavenger2]
+        ]
+    )
+
+    assert Scavenger.get_durability(scavenger) == 20
+    assert Scavenger.get_durability(scavenger2) == 20
+  end
 end
