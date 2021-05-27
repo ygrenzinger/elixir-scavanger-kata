@@ -55,16 +55,16 @@ defmodule Scavenger do
 
     directions = []
 
-    directions = directions ++ if diff_y > 0 do
-      Enum.map(1..diff_y, fn _ -> :north end)
-    else
-      []
+    directions = directions ++ cond do
+      diff_y > 0 -> Enum.map(1..abs(diff_y), fn _ -> :north end)
+      diff_y < 0 -> Enum.map(1..abs(diff_y), fn _ -> :south end)
+      true -> []
     end
 
-    directions = directions ++ if diff_y < 0 do
-      Enum.map(1..abs(diff_y), fn _ -> :south end)
-    else
-      []
+    directions = directions ++ cond do
+      diff_x > 0 -> Enum.map(1..abs(diff_x), fn _ -> :west end)
+      diff_x < 0 -> Enum.map(1..abs(diff_x), fn _ -> :east end)
+      true -> []
     end
 
     directions
