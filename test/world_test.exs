@@ -323,9 +323,7 @@ defmodule WorldTest do
     World.add_scrap(state.world, 1, 1)
     World.add_scrap(state.world, 0, 2)
 
-    :ok = Scavenger.gather_scraps(scavenger)
-
-    {:ok, map} = World.get_map(state.world)
+    Scavenger.gather_scraps(scavenger)
 
     assert Scavenger.get_durability(scavenger) == 40
   end
@@ -335,24 +333,13 @@ defmodule WorldTest do
     {:ok, scavenger2} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger, 0, 0)
     World.add_robot(state.world, scavenger2, 2, 1)
-    World.add_scrap(state.world, 2, 2)
     World.add_scrap(state.world, 0, 1)
+    World.add_scrap(state.world, 2, 2)
 
-    :ok = Scavenger.move_to_scrap(scavenger)
-    :ok = Scavenger.move_to_scrap(scavenger2)
+    :ok = Scavenger.gather_scraps(scavenger)
+    :ok = Scavenger.gather_scraps(scavenger2)
 
-    {:ok, map} = World.get_map(state.world)
-
-    assert(
-      map ==
-        [
-          [:desert, :desert, :desert],
-          [scavenger, :desert, :desert],
-          [:desert, :desert, scavenger2]
-        ]
-    )
-
-    assert Scavenger.get_durability(scavenger) == 20
-    assert Scavenger.get_durability(scavenger2) == 20
+    scores = { Scavenger.get_durability(scavenger), Scavenger.get_durability(scavenger2) }
+    assert scores == { 20, 20 }
   end
 end

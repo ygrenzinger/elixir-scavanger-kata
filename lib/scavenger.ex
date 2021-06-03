@@ -22,11 +22,11 @@ defmodule Scavenger do
     {:reply, :ok, state}
   end
 
-  def handle_call(:gather_scraps, _from, original_state) do
+  def handle_cast(:gather_scraps, original_state) do
     new_state = scraps(original_state)
     |> Stream.take_while(&(&1 != nil))
     |> Enum.reduce(original_state, &move_to(&1, &2))
-    {:reply, :ok, new_state}
+    {:noreply, new_state}
   end
 
   def handle_call(:get_durability, _from, state) do
@@ -76,6 +76,8 @@ defmodule Scavenger do
     commands = get_path_between_coords(scavenger_coord, coord)
 
     Enum.reduce(commands, state, fn command, state ->
+      # IO.puts "#{inspect self()} move to #{command}"
+      # Process.sleep(20)
       response = World.move_scavenger(state.world, self(), command)
       update_state(state, response)
     end)
@@ -104,7 +106,7 @@ defmodule Scavenger do
   end
 
   def gather_scraps(scavenger) do
-    GenServer.call(scavenger, :gather_scraps)
+    GenServer.cast(scavenger, :gather_scraps)
   end
 
   def get_durability(scavenger) do
