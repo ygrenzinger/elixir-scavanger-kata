@@ -1,6 +1,6 @@
 # Scavanging Robots
 
-## Features
+## (Wanted) Features
 
 - a robot can move forward on the map (advancing on the square in the direction it face)
 - a robot can turn left or right
