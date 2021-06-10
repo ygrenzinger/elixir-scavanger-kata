@@ -3,7 +3,7 @@ defmodule Scavenger do
 
   # private (API)
   def init(opts) do
-    state = %{world: opts.world, durability: 10}
+    state = %{world: opts.world, durability: 10, sleep: Map.get(opts, :sleep , 100)}
     {:ok, state}
   end
 
@@ -22,6 +22,10 @@ defmodule Scavenger do
     {:reply, :ok, state}
   end
 
+  def handle_call(:get_durability, _from, state) do
+    {:reply, state.durability, state}
+  end
+
   def handle_cast(:gather_scraps, original_state) do
     new_state = scraps(original_state)
     |> Stream.take_while(&(&1 != nil))
@@ -29,15 +33,11 @@ defmodule Scavenger do
     {:noreply, new_state}
   end
 
-  def handle_call(:get_durability, _from, state) do
-    {:reply, state.durability, state}
-  end
-
   defp update_state(state, {:ok, :scrap}) do
     %{state | durability: state.durability + 10}
   end
 
-  defp update_state(state, response) do
+  defp update_state(state, _response) do
     state
   end
 
@@ -77,7 +77,7 @@ defmodule Scavenger do
 
     Enum.reduce(commands, state, fn command, state ->
       # IO.puts "#{inspect self()} move to #{command}"
-      # Process.sleep(20)
+      Process.sleep(state.sleep)
       response = World.move_scavenger(state.world, self(), command)
       update_state(state, response)
     end)
