@@ -25,3 +25,9 @@ scavenger-*.tar
 
 # Temporary files for e.g. tests
 /tmp
+
+
+# IDE
+*.iml
+.idea/
+.vscode/

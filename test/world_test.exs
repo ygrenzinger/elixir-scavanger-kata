@@ -332,14 +332,15 @@ defmodule WorldTest do
     {:ok, scavenger} = Scavenger.start_link(%{world: state.world})
     {:ok, scavenger2} = Scavenger.start_link(%{world: state.world})
     World.add_robot(state.world, scavenger, 0, 0)
-    World.add_robot(state.world, scavenger2, 2, 1)
+    World.add_robot(state.world, scavenger2, 2, 2)
     World.add_scrap(state.world, 0, 1)
-    World.add_scrap(state.world, 2, 2)
+    World.add_scrap(state.world, 0, 2)
+    World.add_scrap(state.world, 2, 1)
 
     :ok = Scavenger.gather_scraps(scavenger)
     :ok = Scavenger.gather_scraps(scavenger2)
 
     scores = { Scavenger.get_durability(scavenger), Scavenger.get_durability(scavenger2) }
-    assert scores == { 20, 20 }
+    assert scores == { 30, 20 }
   end
 end

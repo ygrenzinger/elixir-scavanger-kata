@@ -83,9 +83,16 @@ defmodule Scavenger do
     end)
   end
 
+  defp number_of_commands(position, scrap_location) do
+    commands = get_path_between_coords(position, scrap_location)
+    Enum.count(commands)
+  end
+
   defp scraps(state) do
-    Stream.repeatedly(fn  -> 
-      case World.get_scraps_locations(state.world) do
+    position = World.get_scavenger_location(state.world, self())
+    Stream.repeatedly(fn  ->
+      scraps_location = World.get_scraps_locations(state.world)
+      case Enum.sort_by(scraps_location, &number_of_commands(position, &1),  :asc)  do
         [head|_] -> head
         [] -> nil
       end
